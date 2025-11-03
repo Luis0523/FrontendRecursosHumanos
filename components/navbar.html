@@ -1,0 +1,108 @@
+<!-- Navbar principal -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary-custom sticky-top shadow-sm">
+    <div class="container-fluid">
+        <!-- Botón toggle para sidebar en móvil -->
+        <button class="btn btn-link text-white me-2 d-lg-none" id="sidebar-toggle-mobile" type="button">
+            <i class="bi bi-list fs-4"></i>
+        </button>
+
+        <!-- Logo y nombre de la aplicación -->
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <i class="bi bi-hexagon-fill me-2 fs-4"></i>
+            <span class="fw-bold">ARCO</span>
+        </a>
+
+        <!-- Botón toggle para navbar en móvil -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Contenido del navbar -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <!-- Espaciador -->
+            <div class="ms-auto"></div>
+
+            <!-- Menú de usuario -->
+            <ul class="navbar-nav align-items-center">
+                <!-- Notificaciones (opcional para futuro) -->
+                <li class="nav-item dropdown me-3 d-none">
+                    <a class="nav-link position-relative" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-bell fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            3
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                        <li><h6 class="dropdown-header">Notificaciones</h6></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Nueva postulación recibida</a></li>
+                        <li><a class="dropdown-item" href="#">Entrevista programada</a></li>
+                        <li><a class="dropdown-item" href="#">Documento verificado</a></li>
+                    </ul>
+                </li>
+
+                <!-- Menú de usuario -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px;">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <span class="d-none d-lg-inline" id="navbar-user-name">Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                        <li class="px-3 py-2">
+                            <div class="small text-muted">Conectado como</div>
+                            <div class="fw-bold" id="navbar-user-email">usuario@email.com</div>
+                            <div class="badge bg-primary mt-1" id="navbar-user-role">Candidato</div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href="#" id="nav-perfil">
+                                <i class="bi bi-person me-2"></i>Mi Perfil
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#" id="nav-configuracion">
+                                <i class="bi bi-gear me-2"></i>Configuración
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="#" id="logout-btn">
+                                <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .bg-primary-custom {
+        background-color: var(--primary-color) !important;
+    }
+
+    .navbar {
+        height: var(--navbar-height);
+        z-index: var(--z-sticky);
+    }
+
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+
+    .dropdown-menu {
+        min-width: 250px;
+    }
+
+    @media (max-width: 991px) {
+        #sidebar-toggle-mobile {
+            display: block !important;
+        }
+    }
+</style>
+
+<!-- Script del navbar -->
+<script src="/components/navbar.js"></script>

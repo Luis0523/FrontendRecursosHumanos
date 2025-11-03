@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Documentos - Candidato - ARCO</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- Variables CSS -->
+    <link rel="stylesheet" href="/assets/css/variables.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <style>
+        .document-card {
+            transition: all 0.3s ease;
+        }
+
+        .document-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .upload-zone {
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--primary-color);
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+
+        .file-icon {
+            font-size: 3rem;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navbar -->
+    <div id="navbar-container"></div>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content flex-fill" id="main-content">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1 fw-bold">Mis Documentos</h1>
+                    <p class="text-muted mb-0">Gestiona tus documentos de verificación</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSubirDocumento">
+                        <i class="bi bi-cloud-upload me-1"></i> Subir Documento
+                    </button>
+                </div>
+            </div>
+
+            <!-- Información sobre documentos -->
+            <div class="alert alert-info border-0 shadow-sm mb-4">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-info-circle fs-4 me-3"></i>
+                    <div>
+                        <h6 class="alert-heading mb-2">Documentos de Verificación</h6>
+                        <p class="mb-2 small">
+                            Sube tus documentos para validar tu identidad y credenciales. Los documentos verificados
+                            aumentan tu credibilidad ante las empresas.
+                        </p>
+                        <ul class="mb-0 small">
+                            <li>Los documentos deben estar en formato PDF o imagen (JPG, PNG)</li>
+                            <li>El tamaño máximo por archivo es de 5MB</li>
+                            <li>Los documentos serán revisados por nuestro equipo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estadísticas de documentos -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1 small">Total Documentos</p>
+                                    <h3 class="mb-0 fw-bold" id="totalDocumentos">0</h3>
+                                </div>
+                                <div class="bg-primary-light rounded p-3">
+                                    <i class="bi bi-files text-primary fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1 small">Verificados</p>
+                                    <h3 class="mb-0 fw-bold" id="documentosVerificados">0</h3>
+                                </div>
+                                <div class="bg-success-light rounded p-3">
+                                    <i class="bi bi-check-circle text-success fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1 small">En Revisión</p>
+                                    <h3 class="mb-0 fw-bold" id="documentosRevision">0</h3>
+                                </div>
+                                <div class="bg-warning-light rounded p-3">
+                                    <i class="bi bi-clock-history text-warning fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1 small">Rechazados</p>
+                                    <h3 class="mb-0 fw-bold" id="documentosRechazados">0</h3>
+                                </div>
+                                <div class="bg-danger-light rounded p-3">
+                                    <i class="bi bi-x-circle text-danger fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="filtroTipo" class="form-label">
+                                <i class="bi bi-funnel me-1"></i> Filtrar por Tipo
+                            </label>
+                            <select class="form-select" id="filtroTipo" onchange="filtrarDocumentos()">
+                                <option value="">Todos los tipos</option>
+                                <option value="cedula_identidad">Cédula de Identidad</option>
+                                <option value="titulo_profesional">Título Profesional</option>
+                                <option value="certificado">Certificado</option>
+                                <option value="carta_recomendacion">Carta de Recomendación</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="filtroEstado" class="form-label">
+                                <i class="bi bi-funnel me-1"></i> Filtrar por Estado
+                            </label>
+                            <select class="form-select" id="filtroEstado" onchange="filtrarDocumentos()">
+                                <option value="">Todos los estados</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="verificado">Verificado</option>
+                                <option value="rechazado">Rechazado</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="button" class="btn btn-outline-secondary w-100" onclick="limpiarFiltros()">
+                                <i class="bi bi-x-circle me-1"></i> Limpiar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de documentos -->
+            <div class="row g-4" id="documentosContainer">
+                <!-- Spinner de carga -->
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="text-muted mt-3">Cargando documentos...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Subir Documento -->
+    <div class="modal fade" id="modalSubirDocumento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-cloud-upload text-primary me-2"></i>
+                        Subir Documento
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formSubirDocumento" onsubmit="subirDocumento(event)">
+                        <div class="mb-3">
+                            <label for="nombreDocumento" class="form-label">
+                                Nombre del Documento <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="nombreDocumento" required
+                                   placeholder="Ej: Título Universitario">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tipoDocumento" class="form-label">
+                                Tipo de Documento <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" id="tipoDocumento" required>
+                                <option value="">Selecciona un tipo</option>
+                                <option value="cedula_identidad">Cédula de Identidad</option>
+                                <option value="titulo_profesional">Título Profesional</option>
+                                <option value="certificado">Certificado</option>
+                                <option value="carta_recomendacion">Carta de Recomendación</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="archivoDocumento" class="form-label">
+                                Archivo <span class="text-danger">*</span>
+                            </label>
+                            <input type="file" class="form-control" id="archivoDocumento" required
+                                   accept=".pdf,.jpg,.jpeg,.png">
+                            <small class="text-muted">
+                                Formatos aceptados: PDF, JPG, PNG. Tamaño máximo: 5MB
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcionDocumento" class="form-label">
+                                Descripción (opcional)
+                            </label>
+                            <textarea class="form-control" id="descripcionDocumento" rows="2"
+                                      placeholder="Agrega información adicional sobre el documento"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" form="formSubirDocumento" class="btn btn-primary">
+                        <i class="bi bi-cloud-upload me-1"></i> Subir Documento
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ver Documento -->
+    <div class="modal fade" id="modalVerDocumento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalVerDocumentoTitulo">Detalle del Documento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalVerDocumentoBody">
+                    <!-- Contenido dinámico -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Servicios y utilidades -->
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/utils/helpers.js"></script>
+    <script src="/assets/js/services/api.service.js"></script>
+    <script src="/assets/js/services/auth.service.js"></script>
+    <script src="/assets/js/services/candidatos.service.js"></script>
+
+    <!-- Controladores -->
+    <script src="/assets/js/controllers/candidato.controller.js"></script>
+
+    <!-- Componentes -->
+    <script src="/assets/js/components.js"></script>
+
+    <!-- Archivo específico de la página -->
+    <script src="documentos.js"></script>
+</body>
+</html>

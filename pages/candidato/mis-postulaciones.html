@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Postulaciones - Candidato - ARCO</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- Variables CSS -->
+    <link rel="stylesheet" href="/assets/css/variables.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="bg-light">
+    <!-- Navbar -->
+    <div id="navbar-container"></div>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content flex-fill" id="main-content">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1 fw-bold">Mis Postulaciones</h1>
+                    <p class="text-muted mb-0">Seguimiento de tus aplicaciones a vacantes</p>
+                </div>
+                <div>
+                    <a href="/pages/candidato/vacantes.html" class="btn btn-primary">
+                        <i class="bi bi-search me-1"></i> Buscar Vacantes
+                    </a>
+                </div>
+            </div>
+
+            <!-- Resumen de Estados -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1 small">Total Postulaciones</p>
+                                    <h3 class="mb-0 fw-bold" id="totalPostulaciones">0</h3>
+                                </div>
+                                <div class="bg-primary-light rounded p-3">
+                                    <i class="bi bi-send text-primary fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1 small">En Revisión</p>
+                                    <h3 class="mb-0 fw-bold" id="enRevision">0</h3>
+                                </div>
+                                <div class="bg-info-light rounded p-3">
+                                    <i class="bi bi-clock-history text-info fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1 small">Preseleccionado</p>
+                                    <h3 class="mb-0 fw-bold" id="preseleccionado">0</h3>
+                                </div>
+                                <div class="bg-warning-light rounded p-3">
+                                    <i class="bi bi-star text-warning fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1 small">Contratado</p>
+                                    <h3 class="mb-0 fw-bold" id="contratado">0</h3>
+                                </div>
+                                <div class="bg-success-light rounded p-3">
+                                    <i class="bi bi-check-circle text-success fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="filtroEstado" class="form-label">
+                                <i class="bi bi-funnel me-1"></i> Filtrar por Estado
+                            </label>
+                            <select class="form-select" id="filtroEstado" onchange="filtrarPostulaciones()">
+                                <option value="">Todos los estados</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="en_revision">En Revisión</option>
+                                <option value="preseleccionado">Preseleccionado</option>
+                                <option value="entrevista">Entrevista</option>
+                                <option value="pruebas">Pruebas</option>
+                                <option value="contratado">Contratado</option>
+                                <option value="rechazado">Rechazado</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="ordenar" class="form-label">
+                                <i class="bi bi-sort-down me-1"></i> Ordenar por
+                            </label>
+                            <select class="form-select" id="ordenar" onchange="ordenarPostulaciones()">
+                                <option value="fecha_desc">Fecha (Más reciente)</option>
+                                <option value="fecha_asc">Fecha (Más antigua)</option>
+                                <option value="empresa">Empresa</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="button" class="btn btn-outline-secondary w-100" onclick="limpiarFiltros()">
+                                <i class="bi bi-x-circle me-1"></i> Limpiar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de Postulaciones -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-list-ul text-primary me-2"></i>
+                        Historial de Postulaciones
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4">Vacante</th>
+                                    <th>Empresa</th>
+                                    <th>Fecha de Postulación</th>
+                                    <th>Estado</th>
+                                    <th>Observaciones</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="postulacionesTableBody">
+                                <!-- Las filas se generarán dinámicamente -->
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Cargando...</span>
+                                        </div>
+                                        <p class="text-muted mt-2">Cargando postulaciones...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="mt-4">
+                <div class="alert alert-info border-0 shadow-sm">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-info-circle fs-4 me-3"></i>
+                        <div>
+                            <h6 class="alert-heading mb-2">Sobre los estados de postulación</h6>
+                            <ul class="mb-0 small">
+                                <li><strong>Pendiente:</strong> Tu postulación ha sido recibida y está en espera de revisión</li>
+                                <li><strong>En Revisión:</strong> La empresa está revisando tu perfil</li>
+                                <li><strong>Preseleccionado:</strong> Has sido preseleccionado para continuar en el proceso</li>
+                                <li><strong>Entrevista:</strong> Has sido convocado a una entrevista</li>
+                                <li><strong>Pruebas:</strong> Debes completar pruebas técnicas o psicométricas</li>
+                                <li><strong>Contratado:</strong> ¡Felicitaciones! Has sido seleccionado para el puesto</li>
+                                <li><strong>Rechazado:</strong> La empresa ha decidido continuar con otros candidatos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Servicios y utilidades -->
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/utils/helpers.js"></script>
+    <script src="/assets/js/services/api.service.js"></script>
+    <script src="/assets/js/services/auth.service.js"></script>
+    <script src="/assets/js/services/candidatos.service.js"></script>
+
+    <!-- Controladores -->
+    <script src="/assets/js/controllers/candidato.controller.js"></script>
+
+    <!-- Componentes -->
+    <script src="/assets/js/components.js"></script>
+
+    <!-- Archivo específico de la página -->
+    <script src="mis-postulaciones.js"></script>
+</body>
+</html>

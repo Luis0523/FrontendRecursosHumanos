@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Entrevistas - Candidato - ARCO</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- Variables CSS -->
+    <link rel="stylesheet" href="/assets/css/variables.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <style>
+        .entrevista-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .entrevista-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .entrevista-card.programada {
+            border-left-color: var(--primary-color);
+        }
+
+        .entrevista-card.confirmada {
+            border-left-color: var(--success-color);
+        }
+
+        .entrevista-card.completada {
+            border-left-color: var(--secondary-color);
+            opacity: 0.8;
+        }
+
+        .entrevista-card.cancelada {
+            border-left-color: var(--danger-color);
+            opacity: 0.7;
+        }
+
+        .calendario-icon {
+            font-size: 3rem;
+        }
+
+        .fecha-destacada {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #dee2e6;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary-color);
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navbar -->
+    <div id="navbar-container"></div>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content flex-fill" id="main-content">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1 fw-bold">Mis Entrevistas</h1>
+                    <p class="text-muted mb-0">Gestiona tus entrevistas programadas</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary" onclick="sincronizarCalendario()">
+                        <i class="bi bi-calendar-plus me-1"></i> Sincronizar con Calendario
+                    </button>
+                </div>
+            </div>
+
+            <!-- Información sobre entrevistas -->
+            <div class="alert alert-info border-0 shadow-sm mb-4">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-info-circle fs-4 me-3"></i>
+                    <div>
+                        <h6 class="alert-heading mb-2">Consejos para tu Entrevista</h6>
+                        <ul class="mb-0 small">
+                            <li>Conéctate 5-10 minutos antes de la hora programada</li>
+                            <li>Asegúrate de tener una buena conexión a internet</li>
+                            <li>Prepara un espacio tranquilo y con buena iluminación</li>
+                            <li>Ten a mano tu CV y documentos relevantes</li>
+                            <li>Investiga sobre la empresa antes de la entrevista</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estadísticas de entrevistas -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1 small">Total Entrevistas</p>
+                                    <h3 class="mb-0 fw-bold" id="totalEntrevistas">0</h3>
+                                </div>
+                                <div class="bg-primary-light rounded p-3">
+                                    <i class="bi bi-calendar-event text-primary fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1 small">Programadas</p>
+                                    <h3 class="mb-0 fw-bold" id="entrevistasProgramadas">0</h3>
+                                </div>
+                                <div class="bg-warning-light rounded p-3">
+                                    <i class="bi bi-clock-history text-warning fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1 small">Confirmadas</p>
+                                    <h3 class="mb-0 fw-bold" id="entrevistasConfirmadas">0</h3>
+                                </div>
+                                <div class="bg-success-light rounded p-3">
+                                    <i class="bi bi-check-circle text-success fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1 small">Completadas</p>
+                                    <h3 class="mb-0 fw-bold" id="entrevistasCompletadas">0</h3>
+                                </div>
+                                <div class="bg-info-light rounded p-3">
+                                    <i class="bi bi-clipboard-check text-info fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Próxima entrevista destacada -->
+            <div id="proximaEntrevistaContainer"></div>
+
+            <!-- Filtros -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="filtroEstado" class="form-label">
+                                <i class="bi bi-funnel me-1"></i> Filtrar por Estado
+                            </label>
+                            <select class="form-select" id="filtroEstado" onchange="filtrarEntrevistas()">
+                                <option value="">Todos los estados</option>
+                                <option value="programada">Programada</option>
+                                <option value="confirmada">Confirmada</option>
+                                <option value="completada">Completada</option>
+                                <option value="cancelada">Cancelada</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="filtroTipo" class="form-label">
+                                <i class="bi bi-funnel me-1"></i> Filtrar por Tipo
+                            </label>
+                            <select class="form-select" id="filtroTipo" onchange="filtrarEntrevistas()">
+                                <option value="">Todos los tipos</option>
+                                <option value="video">Video llamada</option>
+                                <option value="presencial">Presencial</option>
+                                <option value="telefonica">Telefónica</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="button" class="btn btn-outline-secondary w-100" onclick="limpiarFiltros()">
+                                <i class="bi bi-x-circle me-1"></i> Limpiar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de entrevistas -->
+            <div class="row g-4" id="entrevistasContainer">
+                <!-- Spinner de carga -->
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="text-muted mt-3">Cargando entrevistas...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Detalle Entrevista -->
+    <div class="modal fade" id="modalDetalleEntrevista" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-calendar-event text-primary me-2"></i>
+                        Detalle de Entrevista
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalDetalleEntrevistaBody">
+                    <!-- Contenido dinámico -->
+                </div>
+                <div class="modal-footer" id="modalDetalleEntrevistaFooter">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Servicios y utilidades -->
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/utils/helpers.js"></script>
+    <script src="/assets/js/services/api.service.js"></script>
+    <script src="/assets/js/services/auth.service.js"></script>
+    <script src="/assets/js/services/candidatos.service.js"></script>
+
+    <!-- Controladores -->
+    <script src="/assets/js/controllers/candidato.controller.js"></script>
+
+    <!-- Componentes -->
+    <script src="/assets/js/components.js"></script>
+
+    <!-- Archivo específico de la página -->
+    <script src="entrevistas.js"></script>
+</body>
+</html>

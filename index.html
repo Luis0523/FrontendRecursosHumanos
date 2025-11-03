@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCO - Plataforma de Gestión de Talento Humano</title>
+    <meta name="description" content="ARCO - Plataforma integral para la gestión de procesos de selección y contratación de personal">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- Variables CSS -->
+    <link rel="stylesheet" href="/assets/css/variables.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <!-- Navbar pública -->f
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="/">
+                <i class="bi bi-hexagon-fill text-primary me-2 fs-3"></i>
+                <span>ARCO</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#caracteristicas">Características</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#como-funciona">Cómo Funciona</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#beneficios">Beneficios</a>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-outline-primary" href="/login.html">Iniciar Sesión</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-primary" href="/registro.html">Registrarse</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero bg-gradient py-5">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h1 class="display-4 fw-bold mb-4">
+                        Encuentra el <span class="text-primary">Talento Perfecto</span> para tu Empresa
+                    </h1>
+                    <p class="lead mb-4 text-muted">
+                        Plataforma integral que conecta empresas con candidatos calificados,
+                        optimizando el proceso de selección y contratación de personal.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="/registro.html" class="btn btn-primary btn-lg">
+                            <i class="bi bi-person-plus me-2"></i>Comenzar Gratis
+                        </a>
+                        <a href="#como-funciona" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-play-circle me-2"></i>Ver Demo
+                        </a>
+                    </div>
+
+                    <!-- Estadísticas -->
+                    <div class="row mt-5 g-4">
+                        <div class="col-4">
+                            <h3 class="fw-bold mb-0">500+</h3>
+                            <small class="text-muted">Empresas</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="fw-bold mb-0">10k+</h3>
+                            <small class="text-muted">Candidatos</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="fw-bold mb-0">95%</h3>
+                            <small class="text-muted">Satisfacción</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <i class="bi bi-diagram-3-fill text-primary" style="font-size: 20rem; opacity: 0.1;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Características -->
+    <section id="caracteristicas" class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">Características Principales</h2>
+                <p class="text-muted">Todo lo que necesitas para gestionar tu proceso de contratación</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon bg-primary-light rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-briefcase-fill text-primary fs-2"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Gestión de Vacantes</h5>
+                            <p class="text-muted">Publica y administra ofertas de empleo de forma sencilla y eficiente.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon bg-primary-light rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-people-fill text-primary fs-2"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Base de Candidatos</h5>
+                            <p class="text-muted">Accede a una amplia base de datos de candidatos calificados.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon bg-primary-light rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-clipboard-check-fill text-primary fs-2"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Pruebas y Evaluaciones</h5>
+                            <p class="text-muted">Realiza pruebas psicométricas, técnicas y médicas en un solo lugar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon bg-primary-light rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-calendar-event-fill text-primary fs-2"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Gestión de Entrevistas</h5>
+                            <p class="text-muted">Programa y gestiona entrevistas con candidatos de manera organizada.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon bg-primary-light rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-file-earmark-check-fill text-primary fs-2"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Verificación de Documentos</h5>
+                            <p class="text-muted">Verifica títulos, certificados y documentos de forma segura.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon bg-primary-light rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-graph-up-arrow text-primary fs-2"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Reportes y Analytics</h5>
+                            <p class="text-muted">Genera reportes detallados y visualiza estadísticas en tiempo real.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cómo Funciona -->
+    <section id="como-funciona" class="py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">¿Cómo Funciona?</h2>
+                <p class="text-muted">Proceso simple en 4 pasos</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="step-number bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                            1
+                        </div>
+                        <h5 class="fw-bold">Regístrate</h5>
+                        <p class="text-muted small">Crea tu cuenta como empresa o candidato en minutos</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="step-number bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                            2
+                        </div>
+                        <h5 class="fw-bold">Publica o Busca</h5>
+                        <p class="text-muted small">Empresas publican vacantes, candidatos buscan oportunidades</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="step-number bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                            3
+                        </div>
+                        <h5 class="fw-bold">Evalúa y Selecciona</h5>
+                        <p class="text-muted small">Realiza pruebas y entrevistas a los mejores candidatos</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="step-number bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                            4
+                        </div>
+                        <h5 class="fw-bold">Contrata</h5>
+                        <p class="text-muted small">Completa el proceso y contrata al talento ideal</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beneficios -->
+    <section id="beneficios" class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h2 class="fw-bold mb-4">Beneficios para tu Empresa</h2>
+                    <div class="d-flex mb-3">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold">Ahorra Tiempo</h5>
+                            <p class="text-muted">Automatiza el proceso de selección y reduce el tiempo de contratación en un 50%.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold">Mejores Decisiones</h5>
+                            <p class="text-muted">Accede a datos y evaluaciones completas para tomar decisiones informadas.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold">Todo Centralizado</h5>
+                            <p class="text-muted">Gestiona todo el proceso en una sola plataforma integrada.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <i class="bi bi-award-fill text-primary" style="font-size: 15rem; opacity: 0.1;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="py-5 bg-primary text-white">
+        <div class="container py-5 text-center">
+            <h2 class="fw-bold mb-3">¿Listo para Comenzar?</h2>
+            <p class="lead mb-4">Únete a cientos de empresas que ya confían en ARCO</p>
+            <a href="/registro.html" class="btn btn-light btn-lg">
+                <i class="bi bi-rocket-takeoff-fill me-2"></i>Empezar Ahora
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; <span id="year"></span> ARCO - Gestión de Talento Humano. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-white text-decoration-none me-3">Privacidad</a>
+                    <a href="#" class="text-white text-decoration-none me-3">Términos</a>
+                    <a href="#" class="text-white text-decoration-none">Contacto</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Actualizar año
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

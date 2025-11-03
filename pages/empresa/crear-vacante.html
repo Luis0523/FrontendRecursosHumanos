@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Vacante - ARCO</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- Variables CSS -->
+    <link rel="stylesheet" href="/assets/css/variables.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="bg-light">
+    <!-- Navbar -->
+    <div id="navbar-container"></div>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content flex-fill" id="main-content">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1 fw-bold" id="page-title">Nueva Vacante</h1>
+                    <p class="text-muted mb-0">Completa la información de la vacante</p>
+                </div>
+                <div>
+                    <a href="/pages/empresa/vacantes.html" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-x-lg me-2"></i>Cancelar
+                    </a>
+                    <button class="btn btn-primary" id="btn-guardar">
+                        <i class="bi bi-save me-2"></i>Publicar Vacante
+                    </button>
+                </div>
+            </div>
+
+            <form id="form-vacante">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <!-- Información Básica -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="mb-0 fw-bold">Información Básica</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label for="titulo" class="form-label">Título de la Vacante <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="titulo" placeholder="Ej: Desarrollador Full Stack Senior" required>
+                                        <small class="text-muted">Sé específico y claro sobre el cargo</small>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="ubicacion" class="form-label">Ubicación <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="ubicacion" placeholder="Ej: Bogotá, Colombia" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="modalidad" class="form-label">Modalidad <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="modalidad" required>
+                                            <option value="">Selecciona modalidad</option>
+                                            <option value="presencial">Presencial</option>
+                                            <option value="remoto">Remoto</option>
+                                            <option value="hibrido">Híbrido</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="tipo-contrato" class="form-label">Tipo de Contrato <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="tipo-contrato" required>
+                                            <option value="">Selecciona tipo</option>
+                                            <option value="indefinido">Indefinido</option>
+                                            <option value="fijo">Término Fijo</option>
+                                            <option value="temporal">Temporal</option>
+                                            <option value="freelance">Freelance</option>
+                                            <option value="practicas">Prácticas</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="nivel-experiencia" class="form-label">Nivel de Experiencia <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="nivel-experiencia" required>
+                                            <option value="">Selecciona nivel</option>
+                                            <option value="sin_experiencia">Sin Experiencia</option>
+                                            <option value="junior">Junior (0-2 años)</option>
+                                            <option value="medio">Medio (2-5 años)</option>
+                                            <option value="senior">Senior (5+ años)</option>
+                                            <option value="experto">Experto (10+ años)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="descripcion" class="form-label">Descripción del Cargo <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="descripcion" rows="5" placeholder="Describe las responsabilidades y funciones del cargo..." required></textarea>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="requisitos" class="form-label">Requisitos <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="requisitos" rows="4" placeholder="Lista los requisitos obligatorios para el cargo..." required></textarea>
+                                        <small class="text-muted">Separa cada requisito con un salto de línea</small>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="responsabilidades" class="form-label">Responsabilidades</label>
+                                        <textarea class="form-control" id="responsabilidades" rows="4" placeholder="Detalla las principales responsabilidades..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Compensación y Beneficios -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="mb-0 fw-bold">Compensación y Beneficios</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="mostrar-salario">
+                                            <label class="form-check-label" for="mostrar-salario">
+                                                Mostrar rango salarial en la publicación
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="salario-min" class="form-label">Salario Mínimo (COP)</label>
+                                        <input type="number" class="form-control" id="salario-min" placeholder="3000000">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="salario-max" class="form-label">Salario Máximo (COP)</label>
+                                        <input type="number" class="form-control" id="salario-max" placeholder="5000000">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="beneficios" class="form-label">Beneficios Adicionales</label>
+                                        <textarea class="form-control" id="beneficios" rows="3" placeholder="Bonos, seguro médico, días adicionales de vacaciones, etc."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Habilidades y Competencias -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="mb-0 fw-bold">Habilidades y Competencias</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label for="habilidades-input" class="form-label">Habilidades Requeridas</label>
+                                        <div class="input-group mb-2">
+                                            <input type="text" class="form-control" id="habilidades-input" placeholder="Ej: JavaScript, React, Node.js">
+                                            <button class="btn btn-outline-secondary" type="button" id="btn-agregar-habilidad">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                        </div>
+                                        <div id="habilidades-list" class="d-flex flex-wrap gap-2"></div>
+                                        <small class="text-muted">Presiona Enter o clic en + para agregar</small>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="idiomas" class="form-label">Idiomas</label>
+                                        <input type="text" class="form-control" id="idiomas" placeholder="Ej: Español (nativo), Inglés (intermedio)">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="educacion" class="form-label">Nivel de Educación</label>
+                                        <select class="form-select" id="educacion">
+                                            <option value="">No especificado</option>
+                                            <option value="bachiller">Bachiller</option>
+                                            <option value="tecnico">Técnico</option>
+                                            <option value="tecnologo">Tecnólogo</option>
+                                            <option value="profesional">Profesional</option>
+                                            <option value="especializacion">Especialización</option>
+                                            <option value="maestria">Maestría</option>
+                                            <option value="doctorado">Doctorado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar derecho -->
+                    <div class="col-lg-4">
+                        <!-- Estado y Configuración -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="mb-0 fw-bold">Estado y Configuración</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="estado" class="form-label">Estado de la Vacante</label>
+                                    <select class="form-select" id="estado">
+                                        <option value="activa">Activa</option>
+                                        <option value="pausada">Pausada</option>
+                                        <option value="cerrada">Cerrada</option>
+                                    </select>
+                                    <small class="text-muted">Solo las vacantes activas son visibles para candidatos</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="fecha-cierre" class="form-label">Fecha de Cierre</label>
+                                    <input type="date" class="form-control" id="fecha-cierre">
+                                    <small class="text-muted">Fecha límite para recibir postulaciones</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="vacantes-disponibles" class="form-label">Número de Vacantes</label>
+                                    <input type="number" class="form-control" id="vacantes-disponibles" value="1" min="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Proceso de Selección -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="mb-0 fw-bold">Proceso de Selección</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="requiere-prueba-tecnica">
+                                    <label class="form-check-label" for="requiere-prueba-tecnica">
+                                        Requiere prueba técnica
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="requiere-prueba-psicometrica">
+                                    <label class="form-check-label" for="requiere-prueba-psicometrica">
+                                        Requiere prueba psicométrica
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="requiere-examenes-medicos">
+                                    <label class="form-check-label" for="requiere-examenes-medicos">
+                                        Requiere exámenes médicos
+                                    </label>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="num-entrevistas" class="form-label">Número de Entrevistas</label>
+                                    <input type="number" class="form-control" id="num-entrevistas" value="2" min="1" max="5">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información Adicional -->
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="mb-0 fw-bold">Información Adicional</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="departamento" class="form-label">Departamento/Área</label>
+                                    <input type="text" class="form-control" id="departamento" placeholder="Ej: Tecnología">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="horario" class="form-label">Horario</label>
+                                    <input type="text" class="form-control" id="horario" placeholder="Ej: Lunes a Viernes 8am - 5pm">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="contacto-reclutador" class="form-label">Email del Reclutador</label>
+                                    <input type="email" class="form-control" id="contacto-reclutador" placeholder="reclutador@empresa.com">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Scripts de la aplicación -->
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/utils/validators.js"></script>
+    <script src="/assets/js/utils/helpers.js"></script>
+    <script src="/assets/js/services/api.service.js"></script>
+    <script src="/assets/js/services/auth.service.js"></script>
+    <script src="/assets/js/services/vacantes.service.js"></script>
+    <script src="/assets/js/controllers/auth.controller.js"></script>
+    <script src="/assets/js/components.js"></script>
+    <script src="/assets/js/main.js"></script>
+
+    <!-- Script específico de la página -->
+    <script src="/pages/empresa/crear-vacante.js"></script>
+</body>
+</html>
