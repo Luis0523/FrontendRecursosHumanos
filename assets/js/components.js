@@ -162,6 +162,7 @@ const ComponentLoader = {
                     { icon: 'bi-briefcase', text: 'Mis Vacantes', link: CONFIG.ROUTES.EMPRESA.VACANTES },
                     { icon: 'bi-plus-circle', text: 'Nueva Vacante', link: CONFIG.ROUTES.EMPRESA.CREAR_VACANTE },
                     { icon: 'bi-file-earmark-person', text: 'Postulaciones', link: CONFIG.ROUTES.EMPRESA.POSTULACIONES },
+                    { icon: 'bi-clipboard-check', text: 'Gestionar Pruebas', link: '/pages/empresa/gestionar-pruebas.html' },
                     { icon: 'bi-search', text: 'Buscar Candidatos', link: CONFIG.ROUTES.EMPRESA.CANDIDATOS }
                 ];
                 break;

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Pruebas Psicométricas - ARCO</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="../../assets/css/variables.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <div id="navbar-container"></div>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Contenido principal -->
+        <main class="flex-grow-1 p-4">
+            <div class="container-fluid">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2>Gestionar Pruebas Psicométricas</h2>
+                        <p class="text-muted">Crea y administra pruebas, preguntas y opciones de respuesta</p>
+                    </div>
+                    <button class="btn btn-primary" id="btn-nueva-prueba">
+                        <i class="bi bi-plus-circle"></i> Nueva Prueba
+                    </button>
+                </div>
+
+                <!-- Tabs -->
+                <ul class="nav nav-tabs mb-4" id="pruebasTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pruebas-tab" data-bs-toggle="tab"
+                                data-bs-target="#pruebas-panel" type="button">
+                            <i class="bi bi-list-check"></i> Pruebas
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="preguntas-tab" data-bs-toggle="tab"
+                                data-bs-target="#preguntas-panel" type="button">
+                            <i class="bi bi-question-circle"></i> Preguntas
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="pruebasTabContent">
+                    <!-- Panel de Pruebas -->
+                    <div class="tab-pane fade show active" id="pruebas-panel">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <select class="form-select" id="filtro-tipo">
+                                    <option value="">Todos los tipos</option>
+                                    <option value="cognitiva">Cognitiva</option>
+                                    <option value="personalidad">Personalidad</option>
+                                    <option value="habilidades">Habilidades</option>
+                                    <option value="conocimientos">Conocimientos</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select" id="filtro-estado">
+                                    <option value="">Todos los estados</option>
+                                    <option value="1">Activas</option>
+                                    <option value="0">Inactivas</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="lista-pruebas" class="row"></div>
+                    </div>
+
+                    <!-- Panel de Preguntas -->
+                    <div class="tab-pane fade" id="preguntas-panel">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            Selecciona una prueba del panel anterior para ver y gestionar sus preguntas
+                        </div>
+
+                        <div id="preguntas-content" style="display: none;">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 id="preguntas-titulo">Preguntas de: <span id="nombre-prueba"></span></h5>
+                                <button class="btn btn-success" id="btn-nueva-pregunta">
+                                    <i class="bi bi-plus-circle"></i> Nueva Pregunta
+                                </button>
+                            </div>
+
+                            <div id="lista-preguntas"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Nueva/Editar Prueba -->
+    <div class="modal fade" id="modalPrueba" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalPruebaTitle">Nueva Prueba</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="form-prueba">
+                    <div class="modal-body">
+                        <input type="hidden" id="prueba-id">
+
+                        <div class="mb-3">
+                            <label class="form-label">Nombre de la Prueba *</label>
+                            <input type="text" class="form-control" id="prueba-nombre" required
+                                   placeholder="Ej: Evaluación de Personalidad 16PF">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Descripción</label>
+                            <textarea class="form-control" id="prueba-descripcion" rows="3"
+                                      placeholder="Describe el objetivo y alcance de esta prueba"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tipo de Prueba *</label>
+                                <select class="form-select" id="prueba-tipo" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="cognitiva">Cognitiva</option>
+                                    <option value="personalidad">Personalidad</option>
+                                    <option value="habilidades">Habilidades</option>
+                                    <option value="conocimientos">Conocimientos</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Duración (minutos)</label>
+                                <input type="number" class="form-control" id="prueba-duracion" min="1"
+                                       placeholder="60">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Puntuación Mínima Aprobatoria</label>
+                            <input type="number" class="form-control" id="prueba-puntuacion-minima"
+                                   min="0" step="0.01" placeholder="70">
+                            <div class="form-text">Puntaje mínimo que debe obtener el candidato para aprobar</div>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="prueba-activa" checked>
+                            <label class="form-check-label" for="prueba-activa">
+                                Prueba activa (disponible para asignación)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nueva/Editar Pregunta -->
+    <div class="modal fade" id="modalPregunta" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalPreguntaTitle">Nueva Pregunta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="form-pregunta">
+                    <div class="modal-body">
+                        <input type="hidden" id="pregunta-id">
+                        <input type="hidden" id="pregunta-id-prueba">
+
+                        <div class="mb-3">
+                            <label class="form-label">Texto de la Pregunta *</label>
+                            <textarea class="form-control" id="pregunta-texto" rows="3" required
+                                      placeholder="Escribe la pregunta aquí..."></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tipo de Pregunta *</label>
+                                <select class="form-select" id="pregunta-tipo" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="opcion_multiple">Opción Múltiple</option>
+                                    <option value="verdadero_falso">Verdadero/Falso</option>
+                                    <option value="abierta">Respuesta Abierta</option>
+                                    <option value="escala">Escala de Valoración</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Puntos</label>
+                                <input type="number" class="form-control" id="pregunta-puntos"
+                                       min="0" step="0.01" value="1">
+                            </div>
+                        </div>
+
+                        <!-- Opciones de respuesta -->
+                        <div id="opciones-container" style="display: none;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label mb-0">Opciones de Respuesta</label>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="btn-agregar-opcion">
+                                    <i class="bi bi-plus"></i> Agregar Opción
+                                </button>
+                            </div>
+                            <div id="lista-opciones"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../assets/js/config.js"></script>
+    <script src="../../assets/js/components.js"></script>
+    <script src="../../assets/js/utils/helpers.js"></script>
+    <script src="../../assets/js/utils/validators.js"></script>
+    <script src="../../assets/js/services/api.service.js"></script>
+    <script src="../../assets/js/services/auth.service.js"></script>
+    <script src="../../assets/js/services/pruebas.service.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    <script src="gestionar-pruebas.js"></script>
+</body>
+</html>

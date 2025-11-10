@@ -220,6 +220,48 @@
         </div>
     </div>
 
+    <!-- Modal Asignar Prueba -->
+    <div class="modal fade" id="modalAsignarPrueba" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Asignar Prueba Psicométrica</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <strong>Candidato:</strong> <span id="modal-prueba-candidato-nombre"></span><br>
+                        <strong>Vacante:</strong> <span id="modal-prueba-vacante-titulo"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="select-prueba" class="form-label">Seleccionar Prueba <span class="text-danger">*</span></label>
+                        <select class="form-select" id="select-prueba" required>
+                            <option value="">Cargando...</option>
+                        </select>
+                        <div class="form-text">Solo se muestran pruebas activas</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fecha-limite" class="form-label">Fecha Límite</label>
+                        <input type="datetime-local" class="form-control" id="fecha-limite">
+                        <div class="form-text">Opcional: Fecha y hora límite para completar la prueba</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="instrucciones-prueba" class="form-label">Instrucciones Especiales</label>
+                        <textarea class="form-control" id="instrucciones-prueba" rows="3"
+                                  placeholder="Agrega instrucciones o comentarios para el candidato (opcional)"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn-confirmar-asignar-prueba">Asignar Prueba</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -231,9 +273,11 @@
     <script src="/assets/js/services/auth.service.js"></script>
     <script src="/assets/js/services/empresa.service.js"></script>
     <script src="/assets/js/services/vacantes.service.js"></script>
+    <script src="/assets/js/services/pruebas.service.js"></script>
     <script src="/assets/js/controllers/auth.controller.js"></script>
     <script src="/assets/js/components.js"></script>
     <script src="/assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Script específico de la página -->
     <script src="/pages/empresa/postulaciones.js"></script>

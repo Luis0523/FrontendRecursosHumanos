@@ -2,67 +2,45 @@
  * Script específico para la página de pruebas del candidato
  */
 
-let todasLasPruebas = [];
+(function() {
+    'use strict';
 
-// Inicialización cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Página de pruebas cargada');
+    // Proteger la página - solo candidatos
+    AuthService.protectPage(CONFIG.ROLES.CANDIDATO);
 
-    // Verificar autenticación
-    if (!AuthService.checkAuth()) {
-        return;
-    }
+    let todasLasPruebas = [];
 
-    // Verificar que el usuario sea candidato
-    const user = AuthService.getUser();
-    if (user.rol !== CONFIG.ROLES.CANDIDATO) {
-        Utils.showError('No tienes permisos para acceder a esta página');
-        setTimeout(() => {
-            window.location.href = CONFIG.ROUTES.HOME;
-        }, 2000);
-        return;
-    }
+    // Inicialización cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', async () => {
+        // Cargar pruebas
+        await cargarPruebas();
+    });
 
-    // Cargar componentes
-    try {
-        await Components.loadAll();
-    } catch (error) {
-        console.error('Error al cargar componentes:', error);
-    }
+    /**
+     * Carga todas las pruebas asignadas al candidato
+     */
+    async function cargarPruebas() {
+        try {
+            const response = await PruebasService.obtenerMisAsignaciones();
 
-    // Cargar pruebas
-    await cargarPruebas();
-});
-
-/**
- * Carga todas las pruebas asignadas al candidato
- */
-async function cargarPruebas() {
-    try {
-        Utils.showLoading('Cargando pruebas...');
-
-        const response = await CandidatosService.getMisPruebas();
-
-        if (response.success) {
-            todasLasPruebas = response.data || [];
-            mostrarPruebas(todasLasPruebas);
-            actualizarEstadisticas(todasLasPruebas);
-        } else {
-            Utils.showError(response.message || 'Error al cargar pruebas');
+            if (response.success) {
+                todasLasPruebas = response.data || [];
+                mostrarPruebas(todasLasPruebas);
+                actualizarEstadisticas(todasLasPruebas);
+            } else {
+                Helpers.showError(response.message || 'Error al cargar pruebas');
+            }
+        } catch (error) {
+            Helpers.showError('Error al cargar pruebas: ' + error.message);
+            mostrarSinPruebas();
         }
-    } catch (error) {
-        Utils.showError('Error al cargar pruebas: ' + error.message);
-        mostrarSinPruebas();
-    } finally {
-        Utils.hideLoading();
     }
-}
 
-/**
- * Muestra las pruebas en el contenedor
- * @param {Array} pruebas - Lista de pruebas
- */
-function mostrarPruebas(pruebas) {
+    /**
+     * Muestra las pruebas en el contenedor
+     * @param {Array} pruebas - Lista de pruebas
+     */
+    function mostrarPruebas(pruebas) {
     const container = document.getElementById('pruebasContainer');
 
     if (!pruebas || pruebas.length === 0) {
@@ -118,7 +96,7 @@ function mostrarPruebas(pruebas) {
                         <div class="mb-2">
                             <small class="text-muted">
                                 <i class="bi bi-calendar-event me-1"></i>
-                                Asignada: ${Utils.formatDate(prueba.fecha_asignacion)}
+                                Asignada: ${Helpers.formatDate(prueba.fecha_asignacion)}
                             </small>
                         </div>
 
@@ -179,10 +157,10 @@ function mostrarPruebas(pruebas) {
     container.innerHTML = html;
 }
 
-/**
- * Muestra mensaje cuando no hay pruebas
- */
-function mostrarSinPruebas() {
+    /**
+     * Muestra mensaje cuando no hay pruebas
+     */
+    function mostrarSinPruebas() {
     const container = document.getElementById('pruebasContainer');
     container.innerHTML = `
         <div class="col-12">
@@ -199,11 +177,11 @@ function mostrarSinPruebas() {
     `;
 }
 
-/**
- * Actualiza las estadísticas de pruebas
- * @param {Array} pruebas - Lista de pruebas
- */
-function actualizarEstadisticas(pruebas) {
+    /**
+     * Actualiza las estadísticas de pruebas
+     * @param {Array} pruebas - Lista de pruebas
+     */
+    function actualizarEstadisticas(pruebas) {
     const total = pruebas.length;
     let pendientes = 0;
     let completadas = 0;
@@ -222,12 +200,12 @@ function actualizarEstadisticas(pruebas) {
     document.getElementById('pruebasExpiradas').textContent = expiradas;
 }
 
-/**
- * Calcula el estado de una prueba
- * @param {Object} prueba - Datos de la prueba
- * @returns {string} - Estado de la prueba
- */
-function calcularEstadoPrueba(prueba) {
+    /**
+     * Calcula el estado de una prueba
+     * @param {Object} prueba - Datos de la prueba
+     * @returns {string} - Estado de la prueba
+     */
+    function calcularEstadoPrueba(prueba) {
     if (prueba.fecha_completado) {
         return 'completada';
     }
@@ -239,12 +217,12 @@ function calcularEstadoPrueba(prueba) {
     return 'pendiente';
 }
 
-/**
- * Retorna el badge HTML según el estado de la prueba
- * @param {string} estado - Estado de la prueba
- * @returns {string} - HTML del badge
- */
-function getEstadoBadge(estado) {
+    /**
+     * Retorna el badge HTML según el estado de la prueba
+     * @param {string} estado - Estado de la prueba
+     * @returns {string} - HTML del badge
+     */
+    function getEstadoBadge(estado) {
     const badges = {
         'pendiente': '<span class="badge bg-warning">Pendiente</span>',
         'completada': '<span class="badge bg-success">Completada</span>',
@@ -254,56 +232,63 @@ function getEstadoBadge(estado) {
     return badges[estado] || '<span class="badge bg-secondary">Desconocido</span>';
 }
 
-/**
- * Calcula el tiempo restante para completar la prueba
- * @param {string} fechaLimite - Fecha límite de la prueba
- * @returns {Object} - Objeto con texto y clase CSS
- */
-function calcularTiempoRestante(fechaLimite) {
-    const ahora = new Date();
-    const limite = new Date(fechaLimite);
-    const diferencia = limite - ahora;
+    /**
+     * Calcula el tiempo restante para completar la prueba
+     * @param {string} fechaLimite - Fecha límite de la prueba
+     * @returns {Object} - Objeto con texto y clase CSS
+     */
+    function calcularTiempoRestante(fechaLimite) {
+        if (!fechaLimite) {
+            return {
+                texto: 'Sin fecha límite',
+                clase: 'text-muted'
+            };
+        }
 
-    if (diferencia <= 0) {
-        return {
-            texto: 'Fecha límite: ' + Utils.formatDate(fechaLimite),
-            clase: 'text-danger fw-bold'
-        };
+        const ahora = new Date();
+        const limite = new Date(fechaLimite);
+        const diferencia = limite - ahora;
+
+        if (diferencia <= 0) {
+            return {
+                texto: 'Fecha límite: ' + Helpers.formatDate(fechaLimite),
+                clase: 'text-danger fw-bold'
+            };
+        }
+
+        const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+        let texto = 'Vence: ';
+        let clase = 'text-muted';
+
+        if (dias > 7) {
+            texto += Helpers.formatDate(fechaLimite);
+        } else if (dias > 0) {
+            texto += `en ${dias} día${dias > 1 ? 's' : ''}`;
+            clase = dias <= 2 ? 'text-danger fw-bold' : 'text-warning';
+        } else if (horas > 0) {
+            texto += `en ${horas} hora${horas > 1 ? 's' : ''}`;
+            clase = 'text-danger fw-bold';
+        } else {
+            texto += 'en menos de 1 hora';
+            clase = 'text-danger fw-bold';
+        }
+
+        return { texto, clase };
     }
 
-    const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-    const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    /**
+     * Muestra el modal para iniciar una prueba
+     * @param {number} pruebaId - ID de la asignación de prueba
+     */
+    window.iniciarPrueba = async function(pruebaId) {
+        const prueba = todasLasPruebas.find(p => p.id_asignacion === pruebaId);
 
-    let texto = 'Vence: ';
-    let clase = 'text-muted';
-
-    if (dias > 7) {
-        texto += Utils.formatDate(fechaLimite);
-    } else if (dias > 0) {
-        texto += `en ${dias} día${dias > 1 ? 's' : ''}`;
-        clase = dias <= 2 ? 'text-danger fw-bold' : 'text-warning';
-    } else if (horas > 0) {
-        texto += `en ${horas} hora${horas > 1 ? 's' : ''}`;
-        clase = 'text-danger fw-bold';
-    } else {
-        texto += 'en menos de 1 hora';
-        clase = 'text-danger fw-bold';
-    }
-
-    return { texto, clase };
-}
-
-/**
- * Muestra el modal para iniciar una prueba
- * @param {number} pruebaId - ID de la asignación de prueba
- */
-function iniciarPrueba(pruebaId) {
-    const prueba = todasLasPruebas.find(p => p.id === pruebaId);
-
-    if (!prueba) {
-        Utils.showError('Prueba no encontrada');
-        return;
-    }
+        if (!prueba) {
+            Helpers.showError('Prueba no encontrada');
+            return;
+        }
 
     const modalBody = document.getElementById('modalIniciarPruebaBody');
     modalBody.innerHTML = `
@@ -317,15 +302,15 @@ function iniciarPrueba(pruebaId) {
         <ul class="list-unstyled">
             <li class="mb-2">
                 <i class="bi bi-clock text-primary me-2"></i>
-                <strong>Duración:</strong> ${prueba.Prueba?.duracion || 'No especificada'} minutos
+                <strong>Duración:</strong> ${prueba.Prueba?.duracion_minutos || 'No especificada'} minutos
             </li>
             <li class="mb-2">
                 <i class="bi bi-question-circle text-primary me-2"></i>
-                <strong>Número de preguntas:</strong> ${prueba.Prueba?.numero_preguntas || 'No especificado'}
+                <strong>Número de preguntas:</strong> ${prueba.Prueba?.Preguntas?.length || 'No especificado'}
             </li>
             <li class="mb-2">
                 <i class="bi bi-alarm text-primary me-2"></i>
-                <strong>Fecha límite:</strong> ${Utils.formatDate(prueba.fecha_limite)}
+                <strong>Fecha límite:</strong> ${prueba.fecha_limite ? Helpers.formatDate(prueba.fecha_limite) : 'Sin límite'}
             </li>
         </ul>
 
@@ -334,52 +319,57 @@ function iniciarPrueba(pruebaId) {
         </p>
     `;
 
-    const btnConfirmar = document.getElementById('btnConfirmarIniciar');
-    btnConfirmar.onclick = () => {
-        confirmarIniciarPrueba(pruebaId);
+        const confirmado = await Helpers.confirm(
+            '¿Iniciar prueba?',
+            'Una vez que inicies la prueba, no podrás pausarla. Asegúrate de tener tiempo disponible.',
+            'Iniciar'
+        );
+
+        if (confirmado) {
+            confirmarIniciarPrueba(pruebaId);
+        }
     };
 
-    const modal = new bootstrap.Modal(document.getElementById('modalIniciarPrueba'));
-    modal.show();
-}
+    /**
+     * Confirma e inicia la prueba
+     * @param {number} pruebaId - ID de la asignación de prueba
+     */
+    async function confirmarIniciarPrueba(pruebaId) {
+        try {
+            // Iniciar la prueba en el backend
+            const response = await PruebasService.iniciarPrueba(pruebaId);
 
-/**
- * Confirma e inicia la prueba
- * @param {number} pruebaId - ID de la asignación de prueba
- */
-function confirmarIniciarPrueba(pruebaId) {
-    // Cerrar modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('modalIniciarPrueba'));
-    modal.hide();
-
-    // Redirigir a la página de realización de la prueba
-    // (Esta página se debe crear posteriormente)
-    Utils.showInfo('Redirigiendo a la prueba...');
-
-    setTimeout(() => {
-        // window.location.href = `/pages/candidato/realizar-prueba.html?id=${pruebaId}`;
-        Utils.showWarning('La funcionalidad de realizar pruebas está en desarrollo');
-    }, 1000);
-}
-
-/**
- * Muestra los resultados de una prueba completada
- * @param {number} pruebaId - ID de la asignación de prueba
- */
-function verResultados(pruebaId) {
-    const prueba = todasLasPruebas.find(p => p.id === pruebaId);
-
-    if (!prueba) {
-        Utils.showError('Prueba no encontrada');
-        return;
+            if (response.success) {
+                Helpers.showSuccess('Prueba iniciada. Redirigiendo...');
+                setTimeout(() => {
+                    window.location.href = `/pages/candidato/realizar-prueba.html?id=${pruebaId}`;
+                }, 1000);
+            }
+        } catch (error) {
+            Helpers.showError(error.message || 'Error al iniciar la prueba');
+        }
     }
 
-    const porcentaje = prueba.puntaje_obtenido !== null && prueba.Prueba?.puntaje_maximo
-        ? Math.round((prueba.puntaje_obtenido / prueba.Prueba.puntaje_maximo) * 100)
-        : 0;
+    /**
+     * Muestra los resultados de una prueba completada
+     * @param {number} pruebaId - ID de la asignación de prueba
+     */
+    window.verResultados = async function(pruebaId) {
+        try {
+            const response = await PruebasService.obtenerResultado(pruebaId);
 
-    const modalBody = document.getElementById('modalVerResultadosBody');
-    modalBody.innerHTML = `
+            if (!response.success) {
+                Helpers.showError('No se pudieron cargar los resultados');
+                return;
+            }
+
+            const prueba = response.data;
+
+            const porcentaje = prueba.porcentaje || 0;
+
+            await Swal.fire({
+                title: 'Resultados de la Prueba',
+                html: `
         <div class="text-center mb-4">
             <div class="display-1 mb-3">
                 ${porcentaje >= 70 ? '<i class="bi bi-emoji-smile text-success"></i>' :
@@ -443,10 +433,10 @@ function verResultados(pruebaId) {
     modal.show();
 }
 
-/**
- * Filtra las pruebas según el estado seleccionado
- */
-function filtrarPruebas() {
+    /**
+     * Filtra las pruebas según el estado seleccionado
+     */
+    window.filtrarPruebas = function() {
     const filtroEstado = document.getElementById('filtroEstado').value;
 
     let pruebasFiltradas = [...todasLasPruebas];
@@ -480,15 +470,17 @@ function ordenarPruebas() {
             break;
     }
 
-    todasLasPruebas = pruebasOrdenadas;
-    mostrarPruebas(todasLasPruebas);
-}
+        todasLasPruebas = pruebasOrdenadas;
+        mostrarPruebas(todasLasPruebas);
+    };
 
-/**
- * Limpia todos los filtros
- */
-function limpiarFiltros() {
-    document.getElementById('filtroEstado').value = '';
-    document.getElementById('ordenar').value = 'fecha_limite_asc';
-    cargarPruebas();
-}
+    /**
+     * Limpia todos los filtros
+     */
+    window.limpiarFiltros = function() {
+        document.getElementById('filtroEstado')?.value = '';
+        document.getElementById('ordenar')?.value = 'fecha_limite_asc';
+        cargarPruebas();
+    };
+
+})();

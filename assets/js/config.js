@@ -5,7 +5,8 @@
 
 const CONFIG = {
     // URL base del API (cambiar según el entorno)
-    API_URL: 'http://100.121.194.109:5000/api',
+    API_URL: 'http://localhost:5000/api',
+    //API_URL: 'http://100.121.194.109:5000/api',
 
     // Timeout para las peticiones HTTP (en milisegundos)
     REQUEST_TIMEOUT: 30000,

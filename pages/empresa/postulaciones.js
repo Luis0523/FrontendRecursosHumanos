@@ -14,18 +14,22 @@
     let vacantes = [];
     let postulacionSeleccionada = null;
     let modalCambiarEstado = null;
+    let modalAsignarPrueba = null;
+    let pruebasDisponibles = [];
 
     /**
      * Inicializa la página
      */
     async function init() {
-        // Inicializar modal
+        // Inicializar modals
         modalCambiarEstado = new bootstrap.Modal(document.getElementById('modalCambiarEstado'));
+        modalAsignarPrueba = new bootstrap.Modal(document.getElementById('modalAsignarPrueba'));
 
         // Cargar datos
         await Promise.all([
             cargarVacantes(),
-            cargarPostulaciones()
+            cargarPostulaciones(),
+            cargarPruebasDisponibles()
         ]);
 
         // Si viene de detalle de vacante, aplicar filtro
@@ -42,6 +46,7 @@
         document.getElementById('filtro-ordenar').addEventListener('change', aplicarFiltros);
         document.getElementById('btn-limpiar-filtros').addEventListener('click', limpiarFiltros);
         document.getElementById('btn-confirmar-estado').addEventListener('click', confirmarCambioEstado);
+        document.getElementById('btn-confirmar-asignar-prueba').addEventListener('click', confirmarAsignarPrueba);
         document.getElementById('btn-exportar').addEventListener('click', exportarPostulaciones);
     }
 
@@ -199,6 +204,9 @@
                         <button class="btn btn-outline-secondary" onclick="abrirCambiarEstado(${postulacion.postulacion_id})" title="Cambiar estado">
                             <i class="bi bi-arrow-repeat"></i>
                         </button>
+                        <button class="btn btn-outline-success" onclick="abrirAsignarPrueba(${postulacion.postulacion_id})" title="Asignar prueba">
+                            <i class="bi bi-clipboard-check"></i>
+                        </button>
                         <button class="btn btn-outline-info" onclick="enviarMensaje(${postulacion.candidato_id})" title="Enviar mensaje">
                             <i class="bi bi-envelope"></i>
                         </button>
@@ -340,6 +348,132 @@
     window.enviarMensaje = function(candidatoId) {
         Helpers.showWarning('Funcionalidad de mensajería en desarrollo');
     };
+
+    /**
+     * Cargar pruebas disponibles
+     */
+    async function cargarPruebasDisponibles() {
+        try {
+            const response = await PruebasService.obtenerPruebas({ activa: 1 });
+            if (response.success) {
+                pruebasDisponibles = response.data || [];
+                llenarSelectPruebas();
+            }
+        } catch (error) {
+            console.error('Error al cargar pruebas:', error);
+        }
+    }
+
+    /**
+     * Llenar el select de pruebas
+     */
+    function llenarSelectPruebas() {
+        const select = document.getElementById('select-prueba');
+        select.innerHTML = '<option value="">Seleccionar prueba...</option>';
+
+        if (pruebasDisponibles.length === 0) {
+            select.innerHTML = '<option value="">No hay pruebas activas disponibles</option>';
+            return;
+        }
+
+        pruebasDisponibles.forEach(prueba => {
+            const option = document.createElement('option');
+            option.value = prueba.id;
+            option.textContent = `${prueba.nombre} (${getTipoLabel(prueba.tipo)})`;
+            select.appendChild(option);
+        });
+    }
+
+    /**
+     * Obtener etiqueta del tipo de prueba
+     */
+    function getTipoLabel(tipo) {
+        const tipos = {
+            'cognitiva': 'Cognitiva',
+            'personalidad': 'Personalidad',
+            'habilidades': 'Habilidades',
+            'conocimientos': 'Conocimientos'
+        };
+        return tipos[tipo] || tipo;
+    }
+
+    /**
+     * Abrir modal para asignar prueba
+     * @param {number} postulacionId - ID de la postulación
+     */
+    window.abrirAsignarPrueba = function(postulacionId) {
+        postulacionSeleccionada = postulaciones.find(p => p.postulacion_id === postulacionId);
+        if (!postulacionSeleccionada) return;
+
+        const candidato = postulacionSeleccionada.candidato || {};
+        const vacante = postulacionSeleccionada.vacante || {};
+
+        document.getElementById('modal-prueba-candidato-nombre').textContent = candidato.nombre || 'Sin nombre';
+        document.getElementById('modal-prueba-vacante-titulo').textContent = vacante.titulo || 'N/A';
+        document.getElementById('select-prueba').value = '';
+        document.getElementById('fecha-limite').value = '';
+        document.getElementById('instrucciones-prueba').value = '';
+
+        modalAsignarPrueba.show();
+    };
+
+    /**
+     * Confirmar asignación de prueba
+     */
+    async function confirmarAsignarPrueba() {
+        if (!postulacionSeleccionada) return;
+
+        try {
+            const idPrueba = document.getElementById('select-prueba').value;
+            const fechaLimite = document.getElementById('fecha-limite').value;
+            const instrucciones = document.getElementById('instrucciones-prueba').value.trim();
+
+            if (!idPrueba) {
+                Helpers.showError('Debes seleccionar una prueba');
+                return;
+            }
+
+            Helpers.showLoader();
+
+            const data = {
+                id_prueba: parseInt(idPrueba),
+                id_candidato: postulacionSeleccionada.candidato_id,
+                id_postulacion: postulacionSeleccionada.postulacion_id,
+                fecha_limite: fechaLimite || null,
+                instrucciones: instrucciones || null
+            };
+
+            const response = await PruebasService.asignarPrueba(data);
+
+            if (response.success) {
+                Helpers.showSuccess('Prueba asignada correctamente al candidato');
+                modalAsignarPrueba.hide();
+
+                // Opcional: Cambiar el estado de la postulación a "pruebas"
+                if (postulacionSeleccionada.estado !== 'pruebas') {
+                    const confirmar = await Helpers.confirm(
+                        '¿Cambiar estado a "Pruebas"?',
+                        'Se asignó la prueba. ¿Deseas actualizar el estado de la postulación a "Pruebas"?',
+                        'Sí, actualizar'
+                    );
+
+                    if (confirmar) {
+                        await VacantesService.actualizarEstadoPostulacion(
+                            postulacionSeleccionada.postulacion_id,
+                            'pruebas',
+                            'Prueba psicométrica asignada'
+                        );
+                        await cargarPostulaciones();
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error al asignar prueba:', error);
+            Helpers.showError(error.message || 'Error al asignar la prueba');
+        } finally {
+            Helpers.hideLoader();
+        }
+    }
 
     /**
      * Exportar postulaciones
