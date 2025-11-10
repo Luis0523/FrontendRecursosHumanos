@@ -105,8 +105,8 @@ const CandidatosService = {
     async postularse(vacanteId, mensaje = null) {
         try {
             const response = await ApiService.post('/vacantes/postularse', {
-                vacante_id: vacanteId,
-                mensaje: mensaje
+                id_vacante: vacanteId,
+                carta_presentacion: mensaje
             });
             return response;
         } catch (error) {

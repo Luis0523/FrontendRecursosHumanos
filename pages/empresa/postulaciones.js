@@ -164,7 +164,9 @@
         postulacionesFiltradas.forEach(postulacion => {
             const tr = document.createElement('tr');
 
+            // Acceder correctamente a los datos anidados
             const candidato = postulacion.candidato || {};
+            const usuario = candidato.usuario || {};
             const vacante = postulacion.vacante || {};
 
             tr.innerHTML = `
@@ -174,8 +176,8 @@
                             <i class="bi bi-person-fill"></i>
                         </div>
                         <div>
-                            <div class="fw-semibold">${candidato.nombre || 'Sin nombre'}</div>
-                            <small class="text-muted">${candidato.email || 'Sin email'}</small>
+                            <div class="fw-semibold">${usuario.nombre || 'Sin nombre'}</div>
+                            <small class="text-muted">${usuario.email || 'Sin email'}</small>
                         </div>
                     </div>
                 </td>
@@ -189,8 +191,8 @@
                 </td>
                 <td>${Helpers.getPostulacionBadge(postulacion.estado)}</td>
                 <td>
-                    ${postulacion.cv_url ?
-                        `<a href="${postulacion.cv_url}" target="_blank" class="btn btn-sm btn-outline-primary">
+                    ${candidato.cv_url ?
+                        `<a href="${candidato.cv_url}" target="_blank" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-file-pdf"></i> Ver CV
                         </a>` :
                         '<span class="text-muted small">Sin CV</span>'
@@ -198,16 +200,16 @@
                 </td>
                 <td>
                     <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary" onclick="verCandidato(${postulacion.candidato_id})" title="Ver perfil">
+                        <button class="btn btn-outline-primary" onclick="verCandidato(${candidato.id})" title="Ver perfil">
                             <i class="bi bi-eye"></i>
                         </button>
-                        <button class="btn btn-outline-secondary" onclick="abrirCambiarEstado(${postulacion.postulacion_id})" title="Cambiar estado">
+                        <button class="btn btn-outline-secondary" onclick="abrirCambiarEstado(${postulacion.id})" title="Cambiar estado">
                             <i class="bi bi-arrow-repeat"></i>
                         </button>
-                        <button class="btn btn-outline-success" onclick="abrirAsignarPrueba(${postulacion.postulacion_id})" title="Asignar prueba">
+                        <button class="btn btn-outline-success" onclick="abrirAsignarPrueba(${postulacion.id})" title="Asignar prueba">
                             <i class="bi bi-clipboard-check"></i>
                         </button>
-                        <button class="btn btn-outline-info" onclick="enviarMensaje(${postulacion.candidato_id})" title="Enviar mensaje">
+                        <button class="btn btn-outline-info" onclick="enviarMensaje(${candidato.id})" title="Enviar mensaje">
                             <i class="bi bi-envelope"></i>
                         </button>
                     </div>
@@ -230,10 +232,12 @@
         // Filtrar
         postulacionesFiltradas = postulaciones.filter(postulacion => {
             const candidato = postulacion.candidato || {};
+            const usuario = candidato.usuario || {};
+            const vacante = postulacion.vacante || {};
             const coincideBusqueda = !buscar ||
-                (candidato.nombre && candidato.nombre.toLowerCase().includes(buscar)) ||
-                (candidato.email && candidato.email.toLowerCase().includes(buscar));
-            const coincideVacante = !vacanteId || postulacion.vacante_id == vacanteId;
+                (usuario.nombre && usuario.nombre.toLowerCase().includes(buscar)) ||
+                (usuario.email && usuario.email.toLowerCase().includes(buscar));
+            const coincideVacante = !vacanteId || vacante.id == vacanteId;
             const coincideEstado = !estado || postulacion.estado === estado;
             return coincideBusqueda && coincideVacante && coincideEstado;
         });
@@ -252,8 +256,8 @@
                 break;
             case 'nombre':
                 postulacionesFiltradas.sort((a, b) => {
-                    const nombreA = (a.candidato?.nombre || '').toLowerCase();
-                    const nombreB = (b.candidato?.nombre || '').toLowerCase();
+                    const nombreA = (a.candidato?.usuario?.nombre || '').toLowerCase();
+                    const nombreB = (b.candidato?.usuario?.nombre || '').toLowerCase();
                     return nombreA.localeCompare(nombreB);
                 });
                 break;
@@ -278,13 +282,14 @@
      * @param {number} postulacionId - ID de la postulación
      */
     window.abrirCambiarEstado = function(postulacionId) {
-        postulacionSeleccionada = postulaciones.find(p => p.postulacion_id === postulacionId);
+        postulacionSeleccionada = postulaciones.find(p => p.id === postulacionId);
         if (!postulacionSeleccionada) return;
 
         const candidato = postulacionSeleccionada.candidato || {};
+        const usuario = candidato.usuario || {};
         const vacante = postulacionSeleccionada.vacante || {};
 
-        document.getElementById('modal-candidato-nombre').textContent = candidato.nombre || 'Sin nombre';
+        document.getElementById('modal-candidato-nombre').textContent = usuario.nombre || 'Sin nombre';
         document.getElementById('modal-vacante-titulo').textContent = vacante.titulo || 'N/A';
         document.getElementById('nuevo-estado').value = postulacionSeleccionada.estado;
         document.getElementById('observaciones').value = '';
@@ -315,7 +320,7 @@
             Helpers.showLoader();
 
             const response = await VacantesService.actualizarEstadoPostulacion(
-                postulacionSeleccionada.postulacion_id,
+                postulacionSeleccionada.id,
                 nuevoEstado,
                 observaciones
             );
@@ -402,13 +407,14 @@
      * @param {number} postulacionId - ID de la postulación
      */
     window.abrirAsignarPrueba = function(postulacionId) {
-        postulacionSeleccionada = postulaciones.find(p => p.postulacion_id === postulacionId);
+        postulacionSeleccionada = postulaciones.find(p => p.id === postulacionId);
         if (!postulacionSeleccionada) return;
 
         const candidato = postulacionSeleccionada.candidato || {};
+        const usuario = candidato.usuario || {};
         const vacante = postulacionSeleccionada.vacante || {};
 
-        document.getElementById('modal-prueba-candidato-nombre').textContent = candidato.nombre || 'Sin nombre';
+        document.getElementById('modal-prueba-candidato-nombre').textContent = usuario.nombre || 'Sin nombre';
         document.getElementById('modal-prueba-vacante-titulo').textContent = vacante.titulo || 'N/A';
         document.getElementById('select-prueba').value = '';
         document.getElementById('fecha-limite').value = '';
@@ -437,8 +443,8 @@
 
             const data = {
                 id_prueba: parseInt(idPrueba),
-                id_candidato: postulacionSeleccionada.candidato_id,
-                id_postulacion: postulacionSeleccionada.postulacion_id,
+                id_candidato: postulacionSeleccionada.candidato?.id,
+                id_vacante: postulacionSeleccionada.vacante?.id,
                 fecha_limite: fechaLimite || null,
                 instrucciones: instrucciones || null
             };
@@ -459,7 +465,7 @@
 
                     if (confirmar) {
                         await VacantesService.actualizarEstadoPostulacion(
-                            postulacionSeleccionada.postulacion_id,
+                            postulacionSeleccionada.id,
                             'pruebas',
                             'Prueba psicométrica asignada'
                         );

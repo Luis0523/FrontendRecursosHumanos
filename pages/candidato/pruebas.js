@@ -283,7 +283,7 @@
      * @param {number} pruebaId - ID de la asignación de prueba
      */
     window.iniciarPrueba = async function(pruebaId) {
-        const prueba = todasLasPruebas.find(p => p.id_asignacion === pruebaId);
+        const prueba = todasLasPruebas.find(p => p.id === pruebaId);
 
         if (!prueba) {
             Helpers.showError('Prueba no encontrada');
@@ -364,7 +364,6 @@
             }
 
             const prueba = response.data;
-
             const porcentaje = prueba.porcentaje || 0;
 
             await Swal.fire({
@@ -427,11 +426,19 @@
                   'Te recomendamos seguir practicando para mejorar tus resultados.'}
             </small>
         </div>
-    `;
+    `,
+                icon: null,
+                confirmButtonText: 'Cerrar',
+                customClass: {
+                    popup: 'swal-wide'
+                }
+            });
 
-    const modal = new bootstrap.Modal(document.getElementById('modalVerResultados'));
-    modal.show();
-}
+        } catch (error) {
+            console.error('Error al ver resultados:', error);
+            Helpers.showError('Error al cargar los resultados');
+        }
+    };
 
     /**
      * Filtra las pruebas según el estado seleccionado
@@ -478,8 +485,12 @@ function ordenarPruebas() {
      * Limpia todos los filtros
      */
     window.limpiarFiltros = function() {
-        document.getElementById('filtroEstado')?.value = '';
-        document.getElementById('ordenar')?.value = 'fecha_limite_asc';
+        const filtroEstado = document.getElementById('filtroEstado');
+        const ordenar = document.getElementById('ordenar');
+        
+        if (filtroEstado) filtroEstado.value = '';
+        if (ordenar) ordenar.value = 'fecha_limite_asc';
+        
         cargarPruebas();
     };
 
