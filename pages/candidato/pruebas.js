@@ -54,8 +54,8 @@
         const estado = calcularEstadoPrueba(prueba);
         const estadoBadge = getEstadoBadge(estado);
         const tiempoRestante = calcularTiempoRestante(prueba.fecha_limite);
-        const porcentaje = prueba.puntaje_obtenido !== null && prueba.Prueba?.puntaje_maximo
-            ? Math.round((prueba.puntaje_obtenido / prueba.Prueba.puntaje_maximo) * 100)
+        const porcentaje = prueba.puntaje_obtenido !== null && prueba.prueba?.puntaje_maximo
+            ? Math.round((prueba.puntaje_obtenido / prueba.prueba.puntaje_maximo) * 100)
             : null;
 
         html += `
@@ -70,24 +70,24 @@
                         </div>
 
                         <h5 class="card-title mb-2">
-                            ${prueba.Prueba?.nombre || 'Prueba sin nombre'}
+                            ${prueba.prueba?.nombre || 'Prueba sin nombre'}
                         </h5>
 
                         <p class="text-muted small mb-3">
-                            ${prueba.Prueba?.descripcion || 'Sin descripción'}
+                            ${prueba.prueba?.descripcion || 'Sin descripción'}
                         </p>
 
                         <div class="mb-2">
                             <small class="text-muted">
                                 <i class="bi bi-briefcase me-1"></i>
-                                Para: ${prueba.Postulacion?.Vacante?.titulo || 'N/A'}
+                                Para: ${prueba.vacante?.titulo || 'N/A'}
                             </small>
                         </div>
 
                         <div class="mb-2">
                             <small class="text-muted">
                                 <i class="bi bi-building me-1"></i>
-                                ${prueba.Postulacion?.Vacante?.Empresa?.nombre_empresa || 'Empresa'}
+                                ${prueba.vacante?.empresa?.nombre_empresa || prueba.empresa?.nombre_empresa || 'Empresa'}
                             </small>
                         </div>
 
@@ -111,25 +111,25 @@
                             <div class="mb-3">
                                 <strong class="text-success">
                                     <i class="bi bi-trophy me-1"></i>
-                                    Puntaje: ${prueba.puntaje_obtenido}/${prueba.Prueba.puntaje_maximo} (${porcentaje}%)
+                                    Puntaje: ${prueba.puntaje_obtenido}/${prueba.prueba.puntaje_maximo} (${porcentaje}%)
                                 </strong>
                             </div>
                         ` : ''}
 
-                        ${prueba.Prueba?.duracion ? `
+                        ${prueba.prueba?.duracion ? `
                             <div class="mb-2">
                                 <small class="text-muted">
                                     <i class="bi bi-clock me-1"></i>
-                                    Duración: ${prueba.Prueba.duracion} minutos
+                                    Duración: ${prueba.prueba.duracion} minutos
                                 </small>
                             </div>
                         ` : ''}
 
-                        ${prueba.Prueba?.numero_preguntas ? `
+                        ${prueba.prueba?.numero_preguntas ? `
                             <div class="mb-3">
                                 <small class="text-muted">
                                     <i class="bi bi-question-circle me-1"></i>
-                                    ${prueba.Prueba.numero_preguntas} preguntas
+                                    ${prueba.prueba.numero_preguntas} preguntas
                                 </small>
                             </div>
                         ` : ''}
@@ -210,7 +210,7 @@
         return 'completada';
     }
 
-    if (new Date(prueba.fecha_limite) < new Date()) {
+    if (prueba.fecha_limite && new Date(prueba.fecha_limite) < new Date()) {
         return 'expirada';
     }
 
@@ -297,16 +297,16 @@
             <strong>Importante:</strong> Una vez que inicies la prueba, no podrás pausarla.
         </div>
 
-        <h5 class="mb-3">${prueba.Prueba?.nombre || 'Prueba'}</h5>
+        <h5 class="mb-3">${prueba.prueba?.nombre || 'Prueba'}</h5>
 
         <ul class="list-unstyled">
             <li class="mb-2">
                 <i class="bi bi-clock text-primary me-2"></i>
-                <strong>Duración:</strong> ${prueba.Prueba?.duracion_minutos || 'No especificada'} minutos
+                <strong>Duración:</strong> ${prueba.prueba?.duracion_minutos || 'No especificada'} minutos
             </li>
             <li class="mb-2">
                 <i class="bi bi-question-circle text-primary me-2"></i>
-                <strong>Número de preguntas:</strong> ${prueba.Prueba?.Preguntas?.length || 'No especificado'}
+                <strong>Número de preguntas:</strong> ${prueba.prueba?.Preguntas?.length || 'No especificado'}
             </li>
             <li class="mb-2">
                 <i class="bi bi-alarm text-primary me-2"></i>
@@ -315,7 +315,7 @@
         </ul>
 
         <p class="text-muted small mb-0">
-            ${prueba.Prueba?.descripcion || 'Sin descripción adicional'}
+            ${prueba.prueba?.descripcion || 'Sin descripción adicional'}
         </p>
     `;
 
@@ -379,7 +379,7 @@
             <div class="display-4 fw-bold ${porcentaje >= 70 ? 'text-success' : porcentaje >= 50 ? 'text-warning' : 'text-danger'}">
                 ${porcentaje}%
             </div>
-            <p class="text-muted">${prueba.puntaje_obtenido} de ${prueba.Prueba?.puntaje_maximo} puntos</p>
+            <p class="text-muted">${prueba.puntaje_obtenido} de ${prueba.prueba?.puntaje_maximo} puntos</p>
         </div>
 
         <hr>
@@ -387,7 +387,7 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <strong>Prueba:</strong><br>
-                ${prueba.Prueba?.nombre || 'N/A'}
+                ${prueba.prueba?.nombre || 'N/A'}
             </div>
             <div class="col-md-6">
                 <strong>Completada:</strong><br>
@@ -398,11 +398,11 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <strong>Vacante:</strong><br>
-                ${prueba.Postulacion?.Vacante?.titulo || 'N/A'}
+                ${prueba.vacante?.titulo || 'N/A'}
             </div>
             <div class="col-md-6">
                 <strong>Empresa:</strong><br>
-                ${prueba.Postulacion?.Vacante?.Empresa?.nombre_empresa || 'N/A'}
+                ${prueba.vacante?.empresa?.nombre_empresa || prueba.empresa?.nombre_empresa || 'N/A'}
             </div>
         </div>
 

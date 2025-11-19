@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pruebas Técnicas - Empresa - ARCO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/variables.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <!-- Navbar Container -->
+    <div id="navbar-container"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Container -->
+            <div id="sidebar-container"></div>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="container-fluid">
+                    <div class="row mb-4 mt-4">
+                        <div class="col">
+                            <h1 class="h3 mb-0">
+                                <i class="bi bi-code-slash me-2"></i>
+                                Pruebas Técnicas
+                            </h1>
+                            <p class="text-muted">Evalúa las habilidades técnicas de los candidatos</p>
+                        </div>
+                    </div>
+
+                <!-- Filtros -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <input type="text" id="filtro-buscar" class="form-control" placeholder="Buscar candidato...">
+                            </div>
+                            <div class="col-md-3">
+                                <select id="filtro-resultado" class="form-select">
+                                    <option value="">Todos los resultados</option>
+                                    <option value="aprobado">Aprobado</option>
+                                    <option value="reprobado">Reprobado</option>
+                                    <option value="pendiente">Pendiente</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="filtro-estado" class="form-select">
+                                    <option value="">Todos los estados</option>
+                                    <option value="asignada">Asignada</option>
+                                    <option value="entregada">Entregada</option>
+                                    <option value="evaluada">Evaluada</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-outline-secondary w-100" id="btn-limpiar">
+                                    <i class="bi bi-x-circle"></i> Limpiar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Pruebas -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Candidato</th>
+                                        <th>Tipo Prueba</th>
+                                        <th>Fecha Asignación</th>
+                                        <th>Estado</th>
+                                        <th>Resultado</th>
+                                        <th>Puntuación</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-pruebas">
+                                    <tr>
+                                        <td colspan="7" class="text-center py-4">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Cargando...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Evaluar -->
+    <div class="modal fade" id="modalEvaluar" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Evaluar Prueba Técnica</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-evaluacion">
+                        <input type="hidden" id="prueba-id">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">PDF de Evaluación (Opcional)</label>
+                            <input type="file" class="form-control" id="archivo-pdf" accept=".pdf">
+                            <small class="text-muted">Documento con la evaluación detallada</small>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Resultado *</label>
+                                <select class="form-select" id="resultado" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="aprobado">Aprobado</option>
+                                    <option value="reprobado">Reprobado</option>
+                                    <option value="pendiente">Pendiente</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Puntuación * (0-100)</label>
+                                <input type="number" class="form-control" id="puntaje" min="0" max="100" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Comentarios del Evaluador *</label>
+                            <textarea class="form-control" id="comentarios" rows="3" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Aspectos Positivos</label>
+                            <textarea class="form-control" id="aspectos-positivos" rows="2"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Aspectos a Mejorar</label>
+                            <textarea class="form-control" id="aspectos-negativos" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn-guardar-evaluacion">
+                        <i class="bi bi-check-circle"></i> Guardar Evaluación
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/utils/helpers.js"></script>
+    <script src="/assets/js/services/api.service.js"></script>
+    <script src="/assets/js/services/auth.service.js"></script>
+    <script src="/assets/js/components.js"></script>
+    <script src="/assets/js/main.js"></script>
+    <script src="pruebas-tecnicas.js"></script>
+</body>
+</html>

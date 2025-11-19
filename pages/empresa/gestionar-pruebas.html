@@ -14,20 +14,21 @@
     <link rel="stylesheet" href="../../assets/css/styles.css">
 </head>
 <body>
-    <!-- Navbar -->
+    <!-- Navbar Container -->
     <div id="navbar-container"></div>
 
-    <div class="d-flex">
-        <!-- Sidebar -->
-        <div id="sidebar-container"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Container -->
+            <div id="sidebar-container"></div>
 
-        <!-- Contenido principal -->
-        <main class="flex-grow-1 p-4">
-            <div class="container-fluid">
-                <!-- Header -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h2>Gestionar Pruebas Psicométricas</h2>
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="container-fluid">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+                        <div>
+                            <h2>Gestionar Pruebas Psicométricas</h2>
                         <p class="text-muted">Crea y administra pruebas, preguntas y opciones de respuesta</p>
                     </div>
                     <button class="btn btn-primary" id="btn-nueva-prueba">
@@ -96,8 +97,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
+                </div>
+            </main>
+        </div>
     </div>
 
     <!-- Modal Nueva/Editar Prueba -->

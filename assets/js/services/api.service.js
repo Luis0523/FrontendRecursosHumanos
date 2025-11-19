@@ -264,3 +264,6 @@ const ApiService = {
         }
     }
 };
+
+// Exportar como API para compatibilidad
+const API = ApiService;

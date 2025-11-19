@@ -60,7 +60,7 @@
 
             if (response.success) {
                 prueba = response.data;
-                preguntas = prueba.Prueba?.Preguntas || [];
+                preguntas = prueba.prueba?.preguntas || [];
 
                 if (preguntas.length === 0) {
                     throw new Error('Esta prueba no tiene preguntas configuradas');
@@ -102,10 +102,10 @@
      * Mostrar instrucciones de la prueba
      */
     function mostrarInstrucciones() {
-        document.getElementById('prueba-titulo').textContent = prueba.Prueba?.nombre || 'Prueba';
+        document.getElementById('prueba-titulo').textContent = prueba.prueba?.nombre || 'Prueba';
 
         const contenido = `
-            <p class="lead">${prueba.Prueba?.descripcion || 'Completa esta prueba lo mejor que puedas.'}</p>
+            <p class="lead">${prueba.prueba?.descripcion || 'Completa esta prueba lo mejor que puedas.'}</p>
 
             <div class="row mt-4">
                 <div class="col-md-4">
@@ -119,14 +119,14 @@
                     <div class="text-center p-3 bg-light rounded">
                         <i class="bi bi-clock fs-3 text-primary"></i>
                         <h6 class="mt-2">Duración</h6>
-                        <strong>${prueba.Prueba?.duracion_minutos || 'Sin límite'} ${prueba.Prueba?.duracion_minutos ? 'minutos' : ''}</strong>
+                        <strong>${prueba.prueba?.duracion_minutos || 'Sin límite'} ${prueba.prueba?.duracion_minutos ? 'minutos' : ''}</strong>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="text-center p-3 bg-light rounded">
                         <i class="bi bi-star fs-3 text-primary"></i>
                         <h6 class="mt-2">Puntuación Mínima</h6>
-                        <strong>${prueba.Prueba?.puntuacion_minima || 'N/A'}</strong>
+                        <strong>${prueba.prueba?.puntuacion_minima || 'N/A'}</strong>
                     </div>
                 </div>
             </div>
@@ -151,8 +151,8 @@
         document.getElementById('prueba-container').classList.remove('d-none');
 
         // Iniciar temporizador si la prueba tiene duración
-        if (prueba.Prueba?.duracion_minutos) {
-            tiempoRestante = prueba.Prueba.duracion_minutos * 60; // convertir a segundos
+        if (prueba.prueba?.duracion_minutos) {
+            tiempoRestante = prueba.prueba.duracion_minutos * 60; // convertir a segundos
             document.getElementById('timer-container').classList.remove('d-none');
             iniciarTemporizador();
         }
@@ -400,7 +400,7 @@
                 id_asignacion: parseInt(idAsignacion),
                 id_pregunta: idPregunta,
                 id_opcion_seleccionada: idOpcion,
-                texto_respuesta: textoRespuesta
+                respuesta_texto: textoRespuesta
             };
 
             await PruebasService.guardarRespuesta(data);

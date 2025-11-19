@@ -430,6 +430,43 @@ const Helpers = {
             rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
             rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
+    },
+
+    /**
+     * Obtiene el badge de estado de prueba
+     * @param {string} estado - Estado de la prueba
+     * @returns {string} - HTML del badge
+     */
+    getPruebaBadge(estado) {
+        const badges = {
+            'pendiente': '<span class="badge bg-warning">Pendiente</span>',
+            'en_progreso': '<span class="badge bg-info">En Progreso</span>',
+            'completada': '<span class="badge bg-success">Completada</span>',
+            'vencida': '<span class="badge bg-danger">Vencida</span>',
+            'cancelada': '<span class="badge bg-secondary">Cancelada</span>'
+        };
+        return badges[estado] || '<span class="badge bg-secondary">Desconocido</span>';
+    },
+
+    /**
+     * Formatea fecha con hora
+     * @param {string|Date} date - Fecha a formatear
+     * @returns {string} - Fecha formateada con hora
+     */
+    formatDateTime(date) {
+        if (!date) return 'N/A';
+        const d = new Date(date);
+        if (isNaN(d.getTime())) return 'Fecha inválida';
+
+        const opciones = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+
+        return d.toLocaleDateString('es-ES', opciones);
     }
 };
 

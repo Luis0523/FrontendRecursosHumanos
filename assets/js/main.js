@@ -69,6 +69,17 @@
         try {
             console.log('📦 Cargando componentes...');
 
+            // Páginas que no requieren componentes (standalone)
+            const standalonePages = [
+                '/pages/candidato/realizar-prueba.html'
+            ];
+
+            const path = window.location.pathname;
+            if (standalonePages.some(page => path.includes(page))) {
+                console.log('⏭️ Página standalone - sin componentes');
+                return;
+            }
+
             // Cargar todos los componentes en paralelo
             await ComponentLoader.loadAllComponents();
 

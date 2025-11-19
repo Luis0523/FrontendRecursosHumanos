@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento de Candidatos - ARCO</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="../../assets/css/variables.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <style>
+        .progress-cell {
+            min-width: 150px;
+        }
+        .badge-status {
+            font-size: 0.75rem;
+            padding: 0.35em 0.65em;
+        }
+        .table-responsive {
+            font-size: 0.9rem;
+        }
+        .icono-estado {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar Container -->
+    <div id="navbar-container"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Container -->
+            <div id="sidebar-container"></div>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="container-fluid">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+                        <div>
+                            <h2><i class="bi bi-graph-up-arrow"></i> Seguimiento de Candidatos</h2>
+                            <p class="text-muted">Vista general del progreso de todos los candidatos</p>
+                        </div>
+                        <button class="btn btn-success" onclick="exportarExcel()">
+                            <i class="bi bi-file-earmark-excel"></i> Exportar a Excel
+                        </button>
+                    </div>
+
+                    <!-- Estadísticas Generales -->
+                    <div class="row mb-4">
+                        <div class="col-md-2">
+                            <div class="card border-primary h-100">
+                                <div class="card-body text-center p-2">
+                                    <i class="bi bi-people text-primary" style="font-size: 1.5rem;"></i>
+                                    <h4 class="mt-2 mb-0" id="stat-total">0</h4>
+                                    <small class="text-muted">Total</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card border-info h-100">
+                                <div class="card-body text-center p-2">
+                                    <i class="bi bi-clock-history text-info" style="font-size: 1.5rem;"></i>
+                                    <h4 class="mt-2 mb-0" id="stat-pendiente">0</h4>
+                                    <small class="text-muted">Pendiente</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card border-warning h-100">
+                                <div class="card-body text-center p-2">
+                                    <i class="bi bi-clipboard-check text-warning" style="font-size: 1.5rem;"></i>
+                                    <h4 class="mt-2 mb-0" id="stat-revision">0</h4>
+                                    <small class="text-muted">En Revisión</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card border-secondary h-100">
+                                <div class="card-body text-center p-2">
+                                    <i class="bi bi-chat-dots text-secondary" style="font-size: 1.5rem;"></i>
+                                    <h4 class="mt-2 mb-0" id="stat-entrevista">0</h4>
+                                    <small class="text-muted">Entrevista</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card border-primary h-100">
+                                <div class="card-body text-center p-2">
+                                    <i class="bi bi-journal-check text-primary" style="font-size: 1.5rem;"></i>
+                                    <h4 class="mt-2 mb-0" id="stat-pruebas">0</h4>
+                                    <small class="text-muted">Pruebas</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card border-success h-100">
+                                <div class="card-body text-center p-2">
+                                    <i class="bi bi-check-circle text-success" style="font-size: 1.5rem;"></i>
+                                    <h4 class="mt-2 mb-0" id="stat-contratado">0</h4>
+                                    <small class="text-muted">Contratado</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filtros -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Buscar</label>
+                                    <input type="text" class="form-control" id="buscar" 
+                                           placeholder="Nombre, email o vacante..." 
+                                           onkeyup="filtrarCandidatos()">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Estado</label>
+                                    <select class="form-select" id="filtro-estado" onchange="filtrarCandidatos()">
+                                        <option value="">Todos</option>
+                                        <option value="pendiente">Pendiente</option>
+                                        <option value="revision">En Revisión</option>
+                                        <option value="entrevista">Entrevista</option>
+                                        <option value="pruebas">Pruebas</option>
+                                        <option value="rechazado">Rechazado</option>
+                                        <option value="contratado">Contratado</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Progreso Mínimo</label>
+                                    <input type="range" class="form-range" id="filtro-progreso" 
+                                           min="0" max="100" value="0" 
+                                           oninput="document.getElementById('valor-progreso').textContent = this.value + '%'; filtrarCandidatos()">
+                                    <small class="text-muted" id="valor-progreso">0%</small>
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button class="btn btn-outline-secondary w-100" onclick="limpiarFiltros()">
+                                        <i class="bi bi-x-circle"></i> Limpiar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de Seguimiento -->
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="bi bi-table"></i> Dashboard de Seguimiento</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div id="loading" class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Cargando...</span>
+                                </div>
+                            </div>
+
+                            <div id="sin-datos" class="text-center py-5 d-none">
+                                <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                                <p class="text-muted mt-3">No hay candidatos registrados</p>
+                            </div>
+
+                            <div id="tabla-seguimiento" class="d-none">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-sm mb-0">
+                                        <thead class="table-light sticky-top">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Candidato</th>
+                                                <th>Vacante</th>
+                                                <th>CV</th>
+                                                <th>Estado</th>
+                                                <th class="text-center">Test Psico</th>
+                                                <th class="text-center">Test Médico</th>
+                                                <th class="text-center">Test Técnico</th>
+                                                <th class="text-center">Contratado</th>
+                                                <th class="progress-cell">Progreso</th>
+                                                <th class="text-center">IA</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody-seguimiento"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Modal Análisis con IA -->
+    <div class="modal fade" id="modalAnalisisIA" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-robot"></i> Análisis con IA
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Info del Candidato -->
+                    <div class="alert alert-info mb-3">
+                        <strong>Candidato:</strong> <span id="modal-ia-candidato-nombre"></span><br>
+                        <strong>Vacante:</strong> <span id="modal-ia-vacante-titulo"></span>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div class="text-center py-5" id="ia-loading" style="display: none;">
+                        <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="visually-hidden">Analizando...</span>
+                        </div>
+                        <h5>Analizando candidato con IA...</h5>
+                        <p class="text-muted">Esto puede tomar unos segundos</p>
+                    </div>
+
+                    <!-- Resultados -->
+                    <div id="ia-resultados" style="display: none;">
+                        <!-- Puntuación General -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body text-center">
+                                <h3 class="mb-2">Puntuación de Compatibilidad</h3>
+                                <div class="display-1 fw-bold text-primary mb-2" id="ia-puntuacion">-</div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar" id="ia-puntuacion-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <p class="text-muted mt-2 mb-0" id="ia-categoria">-</p>
+                            </div>
+                        </div>
+
+                        <!-- Análisis Detallado -->
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-success">
+                                            <i class="bi bi-check-circle"></i> Fortalezas
+                                        </h5>
+                                        <ul id="ia-fortalezas" class="list-unstyled">
+                                            <!-- Se carga dinámicamente -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-warning">
+                                            <i class="bi bi-exclamation-triangle"></i> Áreas de Mejora
+                                        </h5>
+                                        <ul id="ia-debilidades" class="list-unstyled">
+                                            <!-- Se carga dinámicamente -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recomendación -->
+                        <div class="card border-0 shadow-sm mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-lightbulb"></i> Recomendación
+                                </h5>
+                                <p id="ia-recomendacion" class="mb-0">-</p>
+                            </div>
+                        </div>
+
+                        <!-- Análisis por Área -->
+                        <div class="card border-0 shadow-sm mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">
+                                    <i class="bi bi-bar-chart"></i> Análisis por Área
+                                </h5>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Experiencia</label>
+                                        <div class="progress" style="height: 25px;">
+                                            <div class="progress-bar bg-info" id="ia-experiencia-bar" role="progressbar" style="width: 0%">
+                                                <span id="ia-experiencia-text">0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Habilidades Técnicas</label>
+                                        <div class="progress" style="height: 25px;">
+                                            <div class="progress-bar bg-success" id="ia-habilidades-bar" role="progressbar" style="width: 0%">
+                                                <span id="ia-habilidades-text">0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Perfil Psicométrico</label>
+                                        <div class="progress" style="height: 25px;">
+                                            <div class="progress-bar bg-warning" id="ia-psicometrico-bar" role="progressbar" style="width: 0%">
+                                                <span id="ia-psicometrico-text">0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Aptitud General</label>
+                                        <div class="progress" style="height: 25px;">
+                                            <div class="progress-bar bg-primary" id="ia-aptitud-bar" role="progressbar" style="width: 0%">
+                                                <span id="ia-aptitud-text">0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Error State -->
+                    <div class="alert alert-danger" id="ia-error" style="display: none;">
+                        <i class="bi bi-exclamation-circle"></i> <span id="ia-error-mensaje"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="btn-regenerar-analisis" style="display: none;">
+                        <i class="bi bi-arrow-clockwise"></i> Regenerar Análisis
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="../../assets/js/config.js"></script>
+    <script src="../../assets/js/components.js"></script>
+    <script src="../../assets/js/utils/helpers.js"></script>
+    <script src="../../assets/js/services/api.service.js"></script>
+    <script src="../../assets/js/services/auth.service.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    <script src="seguimiento.js"></script>
+</body>
+</html>

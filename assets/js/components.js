@@ -163,6 +163,11 @@ const ComponentLoader = {
                     { icon: 'bi-plus-circle', text: 'Nueva Vacante', link: CONFIG.ROUTES.EMPRESA.CREAR_VACANTE },
                     { icon: 'bi-file-earmark-person', text: 'Postulaciones', link: CONFIG.ROUTES.EMPRESA.POSTULACIONES },
                     { icon: 'bi-clipboard-check', text: 'Gestionar Pruebas', link: '/pages/empresa/gestionar-pruebas.html' },
+                    { icon: 'bi-heart-pulse', text: 'Pruebas Médicas', link: '/pages/empresa/pruebas-medicas.html' },
+                    { icon: 'bi-code-slash', text: 'Pruebas Técnicas', link: '/pages/empresa/pruebas-tecnicas.html' },
+                    { icon: 'bi-people-fill', text: 'Planilla', link: '/pages/empresa/planilla.html' },
+                    { icon: 'bi-hourglass-split', text: 'Periodo de Prueba', link: '/pages/empresa/periodo-prueba.html' },
+                    { icon: 'bi-graph-up-arrow', text: 'Seguimiento', link: '/pages/empresa/seguimiento.html' },
                     { icon: 'bi-search', text: 'Buscar Candidatos', link: CONFIG.ROUTES.EMPRESA.CANDIDATOS }
                 ];
                 break;

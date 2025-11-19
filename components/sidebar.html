@@ -44,7 +44,7 @@
     }
 
     .sidebar .nav-link {
-        color: var(--text-primary);
+        color: #1e3a8a;
         padding: 0.75rem 1rem;
         border-radius: var(--border-radius-md);
         transition: all var(--transition-fast);
@@ -55,19 +55,25 @@
     }
 
     .sidebar .nav-link:hover {
-        background-color: var(--bg-secondary);
-        color: var(--primary-color);
+        background-color: rgba(30, 58, 138, 0.1);
+        color: #1e40af;
     }
 
     .sidebar .nav-link.active {
-        background-color: var(--primary-lighter);
-        color: var(--primary-color);
+        background-color: rgba(30, 58, 138, 0.15);
+        color: #1e40af;
         font-weight: 600;
     }
 
     .sidebar .nav-link i {
         font-size: 1.25rem;
         width: 24px;
+        color: #1e3a8a;
+    }
+    
+    .sidebar .nav-link:hover i,
+    .sidebar .nav-link.active i {
+        color: #1e40af;
     }
 
     /* Sidebar colapsado */

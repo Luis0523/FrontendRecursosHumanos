@@ -221,42 +221,294 @@
     </div>
 
     <!-- Modal Asignar Prueba -->
+    <!-- Modal Asignar Prueba -->
     <div class="modal fade" id="modalAsignarPrueba" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Asignar Prueba Psicométrica</h5>
+                    <h5 class="modal-title">Asignar Prueba al Candidato</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
+                    <div class="alert alert-info mb-3">
                         <strong>Candidato:</strong> <span id="modal-prueba-candidato-nombre"></span><br>
                         <strong>Vacante:</strong> <span id="modal-prueba-vacante-titulo"></span>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="select-prueba" class="form-label">Seleccionar Prueba <span class="text-danger">*</span></label>
-                        <select class="form-select" id="select-prueba" required>
-                            <option value="">Cargando...</option>
-                        </select>
-                        <div class="form-text">Solo se muestran pruebas activas</div>
+                    <!-- Selector de Tipo de Prueba -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Tipo de Prueba <span class="text-danger">*</span></label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="tipo-prueba" id="tipo-psicometrica" value="psicometrica" checked>
+                            <label class="btn btn-outline-primary" for="tipo-psicometrica">
+                                <i class="bi bi-clipboard-check"></i> Psicométrica
+                            </label>
+
+                            <input type="radio" class="btn-check" name="tipo-prueba" id="tipo-medica" value="medica">
+                            <label class="btn btn-outline-success" for="tipo-medica">
+                                <i class="bi bi-heart-pulse"></i> Médica
+                            </label>
+
+                            <input type="radio" class="btn-check" name="tipo-prueba" id="tipo-tecnica" value="tecnica">
+                            <label class="btn btn-outline-warning" for="tipo-tecnica">
+                                <i class="bi bi-code-slash"></i> Técnica
+                            </label>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="fecha-limite" class="form-label">Fecha Límite</label>
-                        <input type="datetime-local" class="form-control" id="fecha-limite">
-                        <div class="form-text">Opcional: Fecha y hora límite para completar la prueba</div>
+                    <!-- Formulario Prueba Psicométrica -->
+                    <div id="form-psicometrica" class="tipo-prueba-form">
+                        <div class="mb-3">
+                            <label for="select-prueba" class="form-label">Seleccionar Prueba <span class="text-danger">*</span></label>
+                            <select class="form-select" id="select-prueba">
+                                <option value="">Cargando...</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha-limite-psico" class="form-label">Fecha Límite</label>
+                            <input type="datetime-local" class="form-control" id="fecha-limite-psico">
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="instrucciones-prueba" class="form-label">Instrucciones Especiales</label>
-                        <textarea class="form-control" id="instrucciones-prueba" rows="3"
-                                  placeholder="Agrega instrucciones o comentarios para el candidato (opcional)"></textarea>
+                    <!-- Formulario Prueba Médica -->
+                    <div id="form-medica" class="tipo-prueba-form" style="display:none">
+                        <div class="mb-3">
+                            <label for="tipo-examen-medico" class="form-label">Tipo de Examen <span class="text-danger">*</span></label>
+                            <select class="form-select" id="tipo-examen-medico">
+                                <option value="">Seleccionar...</option>
+                                <option value="examen_general">Examen General</option>
+                                <option value="laboratorio">Laboratorio</option>
+                                <option value="drogas">Prueba de Drogas</option>
+                                <option value="vista">Examen de Vista</option>
+                                <option value="auditivo">Examen Auditivo</option>
+                                <option value="psicologico">Evaluación Psicológica</option>
+                                <option value="rayos_x">Rayos X</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombre-examen" class="form-label">Nombre del Examen</label>
+                            <input type="text" class="form-control" id="nombre-examen" placeholder="Ej: Examen Pre-empleo Completo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion-medica" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion-medica" rows="2"></textarea>
+                        </div>
                     </div>
+
+                    <!-- Formulario Prueba Técnica -->
+                    <div id="form-tecnica" class="tipo-prueba-form" style="display:none">
+                        <div class="mb-3">
+                            <label for="tipo-prueba-tecnica" class="form-label">Tipo de Prueba <span class="text-danger">*</span></label>
+                            <select class="form-select" id="tipo-prueba-tecnica">
+                                <option value="">Seleccionar...</option>
+                                <option value="codigo">Prueba de Código</option>
+                                <option value="excel">Prueba de Excel</option>
+                                <option value="idiomas">Prueba de Idiomas</option>
+                                <option value="proyecto">Proyecto Práctico</option>
+                                <option value="caso_practico">Caso Práctico</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombre-prueba-tecnica" class="form-label">Nombre de la Prueba <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nombre-prueba-tecnica" placeholder="Ej: Desarrollo de API REST">
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion-tecnica" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion-tecnica" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="instrucciones-tecnica" class="form-label">Instrucciones</label>
+                            <textarea class="form-control" id="instrucciones-tecnica" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha-limite-tecnica" class="form-label">Fecha Límite</label>
+                            <input type="date" class="form-control" id="fecha-limite-tecnica">
+                        </div>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="btn-confirmar-asignar-prueba">Asignar Prueba</button>
+                    <button type="button" class="btn btn-primary" id="btn-confirmar-asignar-prueba">
+                        <i class="bi bi-check-circle"></i> Asignar Prueba
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Contratar -->
+    <div class="modal fade" id="modalContratar" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-person-check"></i> Contratar Candidato
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <strong>Candidato:</strong> <span id="contratar-nombre"></span><br>
+                        <strong>Vacante:</strong> <span id="contratar-vacante"></span>
+                    </div>
+
+                    <form id="form-contratar">
+                        <input type="hidden" id="contratar-id-candidato">
+                        <input type="hidden" id="contratar-id-postulacion">
+                        <input type="hidden" id="contratar-id-vacante">
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Cargo *</label>
+                                <input type="text" class="form-control" id="contratar-cargo" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Departamento</label>
+                                <input type="text" class="form-control" id="contratar-departamento">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Salario (Q) *</label>
+                                <input type="number" class="form-control" id="contratar-salario" step="0.01" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha Inicio Labores *</label>
+                                <input type="date" class="form-control" id="contratar-fecha-inicio" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tipo de Contrato</label>
+                                <select class="form-select" id="contratar-tipo-contrato">
+                                    <option value="indefinido">Indefinido</option>
+                                    <option value="temporal">Temporal</option>
+                                    <option value="por_proyecto">Por Proyecto</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Periodo de Prueba (meses)</label>
+                                <input type="number" class="form-control" id="contratar-periodo-prueba" value="3" min="0" max="12">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notas</label>
+                            <textarea class="form-control" id="contratar-notas" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="btn-confirmar-contratar">
+                        <i class="bi bi-check-circle"></i> Contratar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Análisis con IA -->
+    <div class="modal fade" id="modalAnalisisIA" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-robot"></i> Análisis con IA
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Info del Candidato -->
+                    <div class="alert alert-info mb-3">
+                        <strong>Candidato:</strong> <span id="modal-ia-candidato-nombre"></span><br>
+                        <strong>Vacante:</strong> <span id="modal-ia-vacante-titulo"></span>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div class="text-center py-5" id="ia-loading" style="display: none;">
+                        <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="visually-hidden">Analizando...</span>
+                        </div>
+                        <h5>Analizando candidato con IA...</h5>
+                        <p class="text-muted">Esto puede tomar unos segundos</p>
+                    </div>
+
+                    <!-- Resultados -->
+                    <div id="ia-resultados" style="display: none;">
+                        <!-- Puntuación General -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body text-center">
+                                <h3 class="mb-2">Puntuación de Compatibilidad</h3>
+                                <div class="display-1 fw-bold text-primary mb-2" id="ia-puntuacion">-</div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar" id="ia-puntuacion-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <p class="text-muted mt-2 mb-0" id="ia-categoria">-</p>
+                            </div>
+                        </div>
+
+                        <!-- Análisis Detallado -->
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-success">
+                                            <i class="bi bi-check-circle"></i> Fortalezas
+                                        </h5>
+                                        <ul id="ia-fortalezas" class="list-unstyled">
+                                            <!-- Se carga dinámicamente -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-warning">
+                                            <i class="bi bi-exclamation-triangle"></i> Áreas de Mejora
+                                        </h5>
+                                        <ul id="ia-debilidades" class="list-unstyled">
+                                            <!-- Se carga dinámicamente -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recomendación -->
+                        <div class="card border-0 shadow-sm mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-lightbulb"></i> Recomendación
+                                </h5>
+                                <p id="ia-recomendacion" class="mb-0 fw-bold">-</p>
+                            </div>
+                        </div>
+
+                        <!-- Resumen -->
+                        <div class="card border-0 shadow-sm mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-file-text"></i> Resumen del Análisis
+                                </h5>
+                                <p id="ia-resumen" class="mb-0">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Error State -->
+                    <div class="alert alert-danger" id="ia-error" style="display: none;">
+                        <i class="bi bi-exclamation-circle"></i> <span id="ia-error-mensaje"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="btn-regenerar-analisis" style="display: none;">
+                        <i class="bi bi-arrow-clockwise"></i> Regenerar Análisis
+                    </button>
                 </div>
             </div>
         </div>

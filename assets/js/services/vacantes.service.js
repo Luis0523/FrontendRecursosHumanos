@@ -123,7 +123,7 @@ const VacantesService = {
      */
     async actualizarEstadoPostulacion(postulacionId, nuevoEstado, observaciones = null) {
         try {
-            const response = await ApiService.patch(`/postulaciones/${postulacionId}/estado`, {
+            const response = await ApiService.put(`/vacantes/postulaciones/${postulacionId}`, {
                 estado: nuevoEstado,
                 observaciones: observaciones
             });

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planilla de Empleados - ARCO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/variables.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <!-- Navbar Container -->
+    <div id="navbar-container"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Container -->
+            <div id="sidebar-container"></div>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="container-fluid">
+                    <div class="row mb-4 mt-4">
+                        <div class="col-md-8">
+                            <h1 class="h3 mb-0">
+                                <i class="bi bi-people-fill me-2"></i>
+                                Planilla de Empleados
+                            </h1>
+                            <p class="text-muted">Gestiona tu equipo de trabajo</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#modalImportarExcel">
+                                <i class="bi bi-file-earmark-excel"></i> Importar Excel
+                            </button>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarManual">
+                                <i class="bi bi-plus-circle"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Estadísticas -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Total Empleados</h6>
+                                    <h3 id="stat-total">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Activos</h6>
+                                    <h3 id="stat-activos" class="text-success">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">De Vacaciones</h6>
+                                    <h3 id="stat-vacaciones" class="text-warning">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="text-muted">Inactivos</h6>
+                                    <h3 id="stat-inactivos" class="text-secondary">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filtros -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="text" id="filtro-buscar" class="form-control" placeholder="Buscar por nombre, código o cargo...">
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="filtro-estado" class="form-select">
+                                        <option value="">Todos los estados</option>
+                                        <option value="activo">Activo</option>
+                                        <option value="vacaciones">Vacaciones</option>
+                                        <option value="licencia">Licencia</option>
+                                        <option value="suspendido">Suspendido</option>
+                                        <option value="inactivo">Inactivo</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="filtro-departamento" class="form-select">
+                                        <option value="">Todos los departamentos</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-outline-secondary w-100" id="btn-limpiar">
+                                        <i class="bi bi-x-circle"></i> Limpiar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de Empleados -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Nombre</th>
+                                            <th>Cargo</th>
+                                            <th>Departamento</th>
+                                            <th>Salario</th>
+                                            <th>Ingreso</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-empleados">
+                                        <tr>
+                                            <td colspan="8" class="text-center py-4">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="visually-hidden">Cargando...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Importar Excel -->
+    <div class="modal fade" id="modalImportarExcel" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-file-earmark-excel"></i> Importar Empleados desde Excel
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Formato requerido:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Columnas: nombre, email, cargo, salario, fecha_inicio</li>
+                            <li>Formato: Excel (.xlsx o .xls)</li>
+                            <li><a href="#" id="link-descargar-plantilla">Descargar plantilla de ejemplo</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Archivo Excel</label>
+                        <input type="file" class="form-control" id="archivo-excel" accept=".xlsx,.xls">
+                    </div>
+
+                    <div id="preview-excel" class="d-none">
+                        <h6>Vista previa (primeras 5 filas):</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                                <thead id="preview-thead"></thead>
+                                <tbody id="preview-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="btn-confirmar-importar">
+                        <i class="bi bi-upload"></i> Importar Empleados
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Manual -->
+    <div class="modal fade" id="modalAgregarManual" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Empleado Manualmente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-agregar-manual">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nombre Completo *</label>
+                                <input type="text" class="form-control" id="manual-nombre" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="manual-email" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Cargo *</label>
+                                <input type="text" class="form-control" id="manual-cargo" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Departamento</label>
+                                <input type="text" class="form-control" id="manual-departamento">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Salario * (Q)</label>
+                                <input type="number" class="form-control" id="manual-salario" step="0.01" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha de Inicio *</label>
+                                <input type="date" class="form-control" id="manual-fecha-inicio" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tipo de Contrato</label>
+                                <select class="form-select" id="manual-tipo-contrato">
+                                    <option value="indefinido">Indefinido</option>
+                                    <option value="temporal">Temporal</option>
+                                    <option value="por_proyecto">Por Proyecto</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Periodo de Prueba (meses)</label>
+                                <input type="number" class="form-control" id="manual-meses-prueba" value="3" min="0" max="12">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="manual-en-planilla">
+                                <label class="form-check-label" for="manual-en-planilla">
+                                    Ya está en planilla (pasó periodo de prueba)
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn-guardar-manual">
+                        <i class="bi bi-check-circle"></i> Guardar Empleado
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cambiar Estado -->
+    <div class="modal fade" id="modalCambiarEstado" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cambiar Estado de Empleado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="estado-empleado-id">
+                    <div class="mb-3">
+                        <label class="form-label">Nuevo Estado</label>
+                        <select class="form-select" id="nuevo-estado">
+                            <option value="activo">Activo</option>
+                            <option value="vacaciones">Vacaciones</option>
+                            <option value="licencia">Licencia</option>
+                            <option value="suspendido">Suspendido</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div id="campos-baja" style="display:none">
+                        <div class="mb-3">
+                            <label class="form-label">Motivo de Baja</label>
+                            <select class="form-select" id="motivo-baja">
+                                <option value="renuncia">Renuncia</option>
+                                <option value="despido">Despido</option>
+                                <option value="fin_contrato">Fin de Contrato</option>
+                                <option value="jubilacion">Jubilación</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Observaciones</label>
+                            <textarea class="form-control" id="observaciones-baja" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn-confirmar-cambio-estado">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/utils/helpers.js"></script>
+    <script src="/assets/js/services/api.service.js"></script>
+    <script src="/assets/js/services/auth.service.js"></script>
+    <script src="/assets/js/components.js"></script>
+    <script src="/assets/js/main.js"></script>
+    <script src="planilla.js"></script>
+</body>
+</html>
